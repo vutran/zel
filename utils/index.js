@@ -1,6 +1,7 @@
-const url = require('url');
-const https = require('https');
 const fs = require('fs');
+const url = require('url');
+const path = require('path');
+const https = require('https');
 const pkg = require('../package');
 
 const DOTFILE = '.zel';
@@ -118,6 +119,39 @@ const downloadRepo = (repoName) => new Promise((resolve, reject) => {
         .catch((err) => reject(err));
 });
 
+/**
+ * Read a local `.zel` file (from cwd)
+ *
+ * @return {Object} - The file contents as JSON Object
+ */
+const readLocalFile = () => new Promise((resolve, reject) => {
+    const dotfile = path.resolve(DOTFILE);
+
+    fs.readFile(dotfile, (err, buf) => {
+        if (err && err.code === 'ENOENT') {
+            return reject('A `.zel` file does not exist in this directory.');
+        }
+        try {
+            resolve(parseBase64ToJson(buf));
+        } catch (err) {
+            reject(err.message);
+        }
+    });
+});
+
+/**
+ * Gets `dependencies` from a local `.zel`, if any
+ *
+ * @return {Array} - The list of local dependencies
+ */
+const getLocalDependencies = () => new Promise((resolve, reject) => {
+    readLocalFile().then(file => {
+        const deps = file.dependencies;
+        return deps ? resolve(deps) : reject('No local dependencies defined. Please define a repository.');
+    }).catch(err => reject(err));
+});
+
 module.exports = {
     downloadRepo,
+    getLocalDependencies,
 };
