@@ -99,7 +99,7 @@ const fetchFiles = (repoName, files) => {
  *
  * @param {String} repoName - The repo name
  */
-const download = (repoName) => new Promise((resolve, reject) => {
+const downloadRepo = (repoName) => new Promise((resolve, reject) => {
     const parts = repoName.split('/');
     if (parts.length !== 2) {
         throw new Error('Invalid repository name. Format should be "<username>/<repository>"');
@@ -119,5 +119,5 @@ const download = (repoName) => new Promise((resolve, reject) => {
 });
 
 module.exports = {
-    download,
+    downloadRepo,
 };

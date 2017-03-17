@@ -5,17 +5,22 @@ const chalk = require('chalk');
 const pkg = require('./package');
 const utils = require('./utils');
 
+const ERROR = chalk.red('Error:');
+const OK = chalk.green('Downloaded:');
+
+function download(repo, logger) {
+    utils.downloadRepo(repo).then(files => {
+        files.forEach(file => logger.info(OK, file));
+    }).catch(err => logger.error(ERROR, err.message));
+}
+
 const cli = prog
     .version(pkg.version)
-    .argument('<query>', 'Specify the repository to fetch.')
+    .argument('[query]', 'Specify the repository to fetch.')
     .action((args, options, logger) => {
-        utils.download(args.query)
-            .then((files) => {
-                files.forEach((file) => {
-                    logger.info(chalk.green('Downloaded:'), file);
-                });
-            })
-            .catch((err) => logger.error(chalk.red('Error'), err.message));
+        if (args.query) {
+            return download(args.query, logger);
+        }
     });
 
 prog.parse(process.argv);
