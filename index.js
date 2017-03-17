@@ -21,6 +21,10 @@ const cli = prog
         if (args.query) {
             return download(args.query, logger);
         }
+
+        utils.getLocalDependencies().then(deps => {
+            deps.forEach(repo => download(repo, logger));
+        }).catch(err => logger.error(ERROR, err));
     });
 
 prog.parse(process.argv);
