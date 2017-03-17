@@ -59,15 +59,21 @@ const get = (uri, options) => new Promise((resolve, reject) => {
 });
 
 /**
- * Parse (as JSON) a base64 string
+ * Parse a (`.zel`) file's base64 string as JSON.
+ * Customizes handler for `Unexpected Token` error
  *
- * @param {String} content
+ * @param  {Buffer} content - The file's contents
+ * @param  {String} filepath - The file's path
  * @return {Object}
  */
-const parseBase64ToJson = (content) => {
-    return JSON.parse(
-        Buffer.from(content, 'base64').toString('utf8')
-    );
+const bufferToJSON = (content, filepath) => {
+    try {
+        return JSON.parse(
+            Buffer.from(content, 'base64').toString('utf8')
+        );
+    } catch (err) {
+        throw new Error(`Unexpected token in ${filepath}`);
+    }
 };
 
 /**
@@ -112,8 +118,9 @@ const downloadRepo = (repoName) => new Promise((resolve, reject) => {
             if (resp.message === 'Not Found') {
                 reject({ message: resp.message });
             }
-            const dotfile = parseBase64ToJson(resp.content);
+            const dotfile = bufferToJSON(resp.content, `"${DOTFILE}" from ${repoName}`);
             const files = fetchFiles(repoName, dotfile.files);
+            // @TODO read remote dependencies
             resolve(files);
         })
         .catch((err) => reject(err));
@@ -132,7 +139,8 @@ const readLocalFile = () => new Promise((resolve, reject) => {
             return reject('A `.zel` file does not exist in this directory.');
         }
         try {
-            resolve(parseBase64ToJson(buf));
+            const data = bufferToJSON(buf, dotfile);
+            resolve(data);
         } catch (err) {
             reject(err.message);
         }
