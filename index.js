@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 
 const prog = require('caporal');
+const chalk = require('chalk');
 const pkg = require('./package');
 const utils = require('./utils');
 
@@ -11,10 +12,10 @@ const cli = prog
         utils.download(args.query)
             .then((files) => {
                 files.forEach((file) => {
-                    logger.info(`Downloaded: ${file}`);
+                    logger.info(chalk.green('Downloaded:'), file);
                 });
             })
-            .catch((err) => logger.error(err));
+            .catch((err) => logger.error(chalk.red('Error'), err.message));
     });
 
 prog.parse(process.argv);

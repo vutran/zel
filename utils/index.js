@@ -6,16 +6,6 @@ const pkg = require('../package');
 const DOTFILE = '.zel';
 
 /**
- * Adds a new command
- *
- * @param {Object} cli - The Caporal CLI instance
- * @param {Function} action - The command function
- */
-const add = (cli, action) => {
-    action.call(null, cli);
-};
-
-/**
  * Fetches data from a URI
  *
  * @param {String} uri
@@ -117,15 +107,17 @@ const download = (repoName) => new Promise((resolve, reject) => {
 
     // fetches the dotfile to find the files to download
     get(`https://api.github.com/repos/${repoName}/contents/${DOTFILE}`)
-        .then((resp) => parseBase64ToJson(resp.content))
-        .then((dotfile) => fetchFiles(repoName, dotfile.files))
-        .then((files) => {
+        .then((resp) => {
+            if (resp.message === 'Not Found') {
+                reject({ message: resp.message });
+            }
+            const dotfile = parseBase64ToJson(resp.content);
+            const files = fetchFiles(repoName, dotfile.files);
             resolve(files);
         })
         .catch((err) => reject(err));
 });
 
 module.exports = {
-    add,
     download,
 };
