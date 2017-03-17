@@ -1,0 +1,18 @@
+{
+  "name": "zel",
+  "version": "0.0.0",
+  "description": "zel is small, and simple command-line tool that helps kickstart new projects.",
+  "main": "index.js",
+  "bin": {
+    "zel": "./index.js"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "Vu Tran <vu@vu-tran.com>",
+  "license": "MIT",
+  "dependencies": {
+    "caporal": "^0.3.0"
+  }
+}
