@@ -7,10 +7,11 @@ const utils = require('./utils');
 
 const ERROR = chalk.red('Error:');
 const OK = chalk.green('Downloaded:');
+const FROM = chalk.gray('from');
 
 function download(repo, logger) {
     utils.downloadRepo(repo).then(files => {
-        files.forEach(file => logger.info(OK, file));
+        files.forEach(file => logger.info(OK, `${file} ${FROM} ${repo}`));
     }).catch(err => logger.error(ERROR, err.message));
 }
 
