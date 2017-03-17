@@ -1,6 +1,6 @@
 # zel
 
-> `zel` is small, and simple command-line tool that helps kickstart new projects.
+> `zel` is a small, and simple command-line tool that helps kickstart new projects.
 
 ### Benefits
 
