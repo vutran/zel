@@ -7,7 +7,8 @@
     "zel": "./index.js"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "lint": "eslint index.js utils",
+    "test": "npm run lint"
   },
   "keywords": [],
   "author": "Vu Tran <vu@vu-tran.com>",
@@ -15,5 +16,10 @@
   "dependencies": {
     "caporal": "^0.3.0",
     "chalk": "^1.1.3"
+  },
+  "devDependencies": {
+    "eslint": "3.16.1",
+    "eslint-config-airbnb-base": "^11.1.1",
+    "eslint-plugin-import": "2.2.0"
   }
 }

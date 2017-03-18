@@ -10,12 +10,12 @@ const OK = chalk.green('Downloaded:');
 const FROM = chalk.gray('from');
 
 function download(repo, logger) {
-    utils.downloadRepo(repo).then(files => {
+    utils.downloadRepo(repo).then((files) => {
         files.forEach(file => logger.info(OK, `${file} ${FROM} ${repo}`));
     }).catch(err => logger.error(ERROR, err.message));
 }
 
-const cli = prog
+prog
     .version(pkg.version)
     .argument('[query]', 'Specify the repository to fetch.')
     .action((args, options, logger) => {
@@ -23,7 +23,7 @@ const cli = prog
             return download(args.query, logger);
         }
 
-        utils.getLocalDependencies().then(deps => {
+        utils.getLocalDependencies().then((deps) => {
             deps.forEach(repo => download(repo, logger));
         }).catch(err => logger.error(ERROR, err));
     });

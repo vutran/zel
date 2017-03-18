@@ -19,7 +19,7 @@ const get = (uri, options) => new Promise((resolve, reject) => {
         return;
     }
 
-    let opts = Object.assign({}, {
+    const opts = Object.assign({}, {
         json: true,
     }, options);
 
@@ -106,7 +106,7 @@ const fetchFiles = (repoName, files) => {
  *
  * @param {String} repoName - The repo name
  */
-const downloadRepo = (repoName) => new Promise((resolve, reject) => {
+const downloadRepo = repoName => new Promise((resolve, reject) => {
     const parts = repoName.split('/');
     if (parts.length !== 2) {
         throw new Error('Invalid repository name. Format should be "<username>/<repository>"');
@@ -123,7 +123,7 @@ const downloadRepo = (repoName) => new Promise((resolve, reject) => {
             // @TODO read remote dependencies
             resolve(files);
         })
-        .catch((err) => reject(err));
+        .catch(err => reject(err));
 });
 
 /**
@@ -141,8 +141,8 @@ const readLocalFile = () => new Promise((resolve, reject) => {
         try {
             const data = bufferToJSON(buf, dotfile);
             resolve(data);
-        } catch (err) {
-            reject(err.message);
+        } catch (err2) {
+            reject(err2.message);
         }
     });
 });
@@ -153,7 +153,7 @@ const readLocalFile = () => new Promise((resolve, reject) => {
  * @return {Array} - The list of local dependencies
  */
 const getLocalDependencies = () => new Promise((resolve, reject) => {
-    readLocalFile().then(file => {
+    readLocalFile().then((file) => {
         const deps = file.dependencies;
         return deps ? resolve(deps) : reject('No local dependencies defined. Please define a repository.');
     }).catch(err => reject(err));
