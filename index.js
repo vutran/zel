@@ -2,13 +2,20 @@
 
 const prog = require('caporal');
 const pkg = require('./package');
-const { downloadRepo, getLocalDependencies } = require('./lib');
+const { downloadRepo } = require('./lib/repository');
+const { getLocalDependencies } = require('./lib/local');
 const { FROM, ERROR, OK } = require('./lib/constants');
 
-function download(repo, logger) {
+function init(repo, logger) {
     downloadRepo(repo).then((files) => {
         files.forEach(file => logger.info(OK, `${file} ${FROM} ${repo}`));
     }).catch(err => logger.error(ERROR, err.message));
+}
+
+function initLocal(logger) {
+    getLocalDependencies().then((deps) => {
+        deps.forEach(repo => init(repo, logger));
+    }).catch(err => logger.error(ERROR, err));
 }
 
 prog
@@ -16,12 +23,10 @@ prog
     .argument('[query]', 'Specify the repository to fetch.')
     .action((args, options, logger) => {
         if (args.query) {
-            return download(args.query, logger);
+            return init(args.query, logger);
         }
 
-        getLocalDependencies().then((deps) => {
-            deps.forEach(repo => download(repo, logger));
-        }).catch(err => logger.error(ERROR, err));
+        return initLocal(logger);
     });
 
 prog.parse(process.argv);
