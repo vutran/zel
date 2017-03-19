@@ -1,16 +1,12 @@
 #!/usr/bin/env node
 
 const prog = require('caporal');
-const chalk = require('chalk');
 const pkg = require('./package');
-const utils = require('./utils');
-
-const ERROR = chalk.red('Error:');
-const OK = chalk.green('Downloaded:');
-const FROM = chalk.gray('from');
+const { downloadRepo, getLocalDependencies } = require('./lib');
+const { FROM, ERROR, OK } = require('./lib/constants');
 
 function download(repo, logger) {
-    utils.downloadRepo(repo).then((files) => {
+    downloadRepo(repo).then((files) => {
         files.forEach(file => logger.info(OK, `${file} ${FROM} ${repo}`));
     }).catch(err => logger.error(ERROR, err.message));
 }
@@ -23,7 +19,7 @@ prog
             return download(args.query, logger);
         }
 
-        utils.getLocalDependencies().then((deps) => {
+        getLocalDependencies().then((deps) => {
             deps.forEach(repo => download(repo, logger));
         }).catch(err => logger.error(ERROR, err));
     });
