@@ -4,13 +4,16 @@ const prog = require('caporal');
 const pkg = require('./package');
 const { downloadRepo } = require('./lib/repository');
 const { getLocalDependencies } = require('./lib/local');
-const { ERROR, OK, REPO, SPACER } = require('./lib/constants');
+const { ERROR, OK, TITLE, SPACER } = require('./lib/constants');
 
 function init(repo, logger) {
     downloadRepo(repo)
         .then((arr) => arr.map((file) => `${SPACER} - ${file}`))
-        .then((arr) => [REPO(repo)].concat(arr, ''))
-        .then((arr) => logger.info(OK, arr.join('\n')))
+        .then((arr) => arr.concat('').join('\n'))
+        .then((str) => {
+            logger.info(OK, TITLE(repo));
+            logger.info(str);
+        })
         .catch((err) => logger.error(ERROR, err));
 }
 
