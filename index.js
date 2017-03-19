@@ -9,7 +9,7 @@ const { FROM, ERROR, OK } = require('./lib/constants');
 function init(repo, logger) {
     downloadRepo(repo).then((files) => {
         files.forEach(file => logger.info(OK, `${file} ${FROM} ${repo}`));
-    }).catch(err => logger.error(ERROR, err.message));
+    }).catch(err => logger.error(ERROR, err));
 }
 
 function initLocal(logger) {
