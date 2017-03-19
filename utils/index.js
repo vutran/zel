@@ -82,29 +82,39 @@ const bufferToJSON = (content, filepath) => {
  *
  * @param {String} repoName - The full repo name (username/repository)
  * @param {Array<String>} files - A list of files
- * @return {Array<String>} - The files downloaded
+ * @param {Array<String>} dependencies - A list of zel dependencies
+ * @return {Object} - An object with a list of files and dependencies that were downloaded
  */
-const fetchFiles = (repoName, files) => {
-    if (!files) {
-        throw new Error('No files found.');
+const fetchAndWrite = (repoName, { files, dependencies }) => {
+    if (!files && !dependencies) {
+        throw new Error('No files or dependencies found.');
     }
 
-    files.forEach((file) => {
-        const downloadUrl = `https://raw.githubusercontent.com/${repoName}/master/${file}`;
+    if (files && files.length) {
+        files.forEach((file) => {
+            const downloadUrl = `https://raw.githubusercontent.com/${repoName}/master/${file}`;
 
-        const fileStream = fs.createWriteStream(file);
-        https.get(downloadUrl, (resp) => {
-            resp.pipe(fileStream);
+            const fileStream = fs.createWriteStream(file);
+            https.get(downloadUrl, (resp) => {
+                resp.pipe(fileStream);
+            });
         });
-    });
+    }
 
-    return files;
+    if (dependencies && dependencies.length) {
+        dependencies.forEach((dep) => {
+            downloadRepo(dep);
+        });
+    }
+
+    return { files, dependencies };
 };
 
 /**
  * Downloads from a Github repo
  *
  * @param {String} repoName - The repo name
+ * @return {Promise<Object>} - Resolves an object containing the files, and dependencies
  */
 const downloadRepo = repoName => new Promise((resolve, reject) => {
     const parts = repoName.split('/');
@@ -112,16 +122,16 @@ const downloadRepo = repoName => new Promise((resolve, reject) => {
         throw new Error('Invalid repository name. Format should be "<username>/<repository>"');
     }
 
-    // fetches the dotfile to find the files to download
     get(`https://api.github.com/repos/${repoName}/contents/${DOTFILE}`)
         .then((resp) => {
             if (resp.message === 'Not Found') {
                 reject({ message: resp.message });
             }
             const dotfile = bufferToJSON(resp.content, `"${DOTFILE}" from ${repoName}`);
-            const files = fetchFiles(repoName, dotfile.files);
-            // @TODO read remote dependencies
-            resolve(files);
+
+            const { files, dependencies } = fetchAndWrite(repoName, dotfile);
+
+            resolve({ files, dependencies });
         })
         .catch(err => reject(err));
 });
@@ -129,7 +139,7 @@ const downloadRepo = repoName => new Promise((resolve, reject) => {
 /**
  * Read a local `.zel` file (from cwd)
  *
- * @return {Object} - The file contents as JSON Object
+ * @return {Promise<Object>} - The file contents as JSON Object
  */
 const readLocalFile = () => new Promise((resolve, reject) => {
     const dotfile = path.resolve(DOTFILE);
@@ -150,7 +160,7 @@ const readLocalFile = () => new Promise((resolve, reject) => {
 /**
  * Gets `dependencies` from a local `.zel`, if any
  *
- * @return {Array} - The list of local dependencies
+ * @return {Promise<String[]>} - The list of local dependencies
  */
 const getLocalDependencies = () => new Promise((resolve, reject) => {
     readLocalFile().then((file) => {
