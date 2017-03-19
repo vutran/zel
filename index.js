@@ -44,7 +44,7 @@ prog
         return initLocal(logger);
     })
 
-    .command('validate', 'Validates the .zel file.')
+    .command('validate', 'Validates local .zel file.')
     .option('--failFast', 'Terminates on error/invalid repository.')
     .action((args, options, logger) => {
         getLocalDependencies()
