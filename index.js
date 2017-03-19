@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 const prog = require('caporal');
-const pkg = require('./package');
+const { version } = require('./package');
 const { downloadRepo } = require('./lib/repository');
 const { getLocalDependencies } = require('./lib/local');
 const { ERROR, OK, TITLE, SPACER } = require('./lib/constants');
@@ -24,7 +24,7 @@ function initLocal(logger) {
 }
 
 prog
-    .version(pkg.version)
+    .version(version)
     .argument('[query]', 'Specify the repository to fetch.')
     .action((args, options, logger) => {
         logger.info('\r'); // padding
