@@ -3,6 +3,7 @@
     "rules": {
         "indent": ["error", 4],
         "consistent-return": 0,
+        "arrow-parens": ["error", "always"],
         "comma-dangle": ["error", {
             "arrays": "always-multiline",
             "objects": "always-multiline",

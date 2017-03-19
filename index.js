@@ -16,8 +16,8 @@ function init(repo, logger) {
 
 function initLocal(logger) {
     getLocalDependencies().then((deps) => {
-        deps.forEach(repo => init(repo, logger));
-    }).catch(err => logger.error(ERROR, err));
+        deps.forEach((repo) => init(repo, logger));
+    }).catch((err) => logger.error(ERROR, err));
 }
 
 prog
