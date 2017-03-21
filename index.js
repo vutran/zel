@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+global.Promise = require('bluebird');
 
 const prog = require('caporal');
 const { version } = require('./package');
