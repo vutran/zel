@@ -4,7 +4,8 @@ const prog = require('caporal');
 const { version } = require('./package');
 const { downloadRepo } = require('./lib/repository');
 const { getLocalDependencies } = require('./lib/local');
-const { ERROR, DOWNLOADED, TITLE, SPACER } = require('./lib/constants');
+const { ERROR, DOWNLOADED, TITLE, SPACER, VALID, INVALID } = require('./lib/constants');
+const Resolver = require('./lib/resolver');
 
 function init(repo, logger) {
     downloadRepo(repo)
@@ -18,13 +19,20 @@ function init(repo, logger) {
 }
 
 function initLocal(logger) {
-    getLocalDependencies().then((deps) => {
-        deps.forEach((repo) => init(repo, logger));
-    }).catch((err) => logger.error(ERROR, err));
+    getLocalDependencies()
+        .then((deps) => {
+            if (!deps.length) {
+                logger.error(ERROR, 'No local dependencies defined. Please define a repository.');
+                return;
+            }
+            deps.forEach((repo) => init(repo, logger));
+        })
+        .catch((err) => logger.error(ERROR, err));
 }
 
 prog
     .version(version)
+
     .argument('[query]', 'Specify the repository to fetch.')
     .action((args, options, logger) => {
         logger.info('\r'); // padding
@@ -34,6 +42,26 @@ prog
         }
 
         return initLocal(logger);
+    })
+
+    .command('validate', 'Validates local .zel file.')
+    .option('--failFast', 'Terminates on error/invalid repository.')
+    .action((args, options, logger) => {
+        getLocalDependencies()
+            .then((deps) => {
+                const resolver = new Resolver(deps);
+                resolver.on('valid', (repoName) => {
+                    logger.info(VALID, repoName);
+                });
+                resolver.on('invalid', (repoName) => {
+                    logger.error(INVALID, repoName);
+                });
+                resolver.on('error', (err) => {
+                    logger.error(ERROR, err);
+                });
+                resolver.validate(options.failFast);
+            })
+            .catch((err) => logger.error(ERROR, err));
     });
 
 prog.parse(process.argv);
