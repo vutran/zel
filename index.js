@@ -50,11 +50,11 @@ prog
     .action((args, options, logger) => {
         getLocalDependencies()
             .then((deps) => {
-                new Resolver(deps)
+                new Resolver(options)
                     .on('valid', (repoName) => logger.info(VALID, repoName))
                     .on('invalid', (repoName) => logger.error(INVALID, repoName))
                     .on('error', (err) => logger.error(ERROR, err))
-                    .validate(options.failFast);
+                    .validate(deps);
             })
             .catch((err) => logger.error(ERROR, err));
     });
