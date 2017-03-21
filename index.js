@@ -27,7 +27,7 @@ function initLocal(logger) {
             }
             deps.forEach(repo => init(repo, logger));
         })
-        .catch((err) => logger.error(ERROR, err));
+        .catch(err => logger.error(ERROR, err));
 }
 
 prog
@@ -60,7 +60,8 @@ prog
                     logger.error(ERROR, err);
                 });
                 resolver.validate(options.failFast);
-            });
+            })
+            .catch(err => logger.error(ERROR, err));
     });
 
 prog.parse(process.argv);
