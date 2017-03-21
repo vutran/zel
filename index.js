@@ -25,9 +25,9 @@ function initLocal(logger) {
                 logger.error(ERROR, 'No local dependencies defined. Please define a repository.');
                 return;
             }
-            deps.forEach(repo => init(repo, logger));
+            deps.forEach((repo) => init(repo, logger));
         })
-        .catch(err => logger.error(ERROR, err));
+        .catch((err) => logger.error(ERROR, err));
 }
 
 prog
@@ -61,7 +61,7 @@ prog
                 });
                 resolver.validate(options.failFast);
             })
-            .catch(err => logger.error(ERROR, err));
+            .catch((err) => logger.error(ERROR, err));
     });
 
 prog.parse(process.argv);
