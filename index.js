@@ -22,11 +22,10 @@ function init(repo, logger) {
 function initLocal(logger) {
     getLocalDependencies()
         .then((deps) => {
-            if (!deps.length) {
-                logger.error(LOG.ERROR, 'No local dependencies defined. Please define a repository.');
-                return;
-            }
-            deps.forEach((repo) => init(repo, logger));
+            new Resolver()
+                .validate(deps)
+                    .then(valid => valid.forEach(config => init(config.repoName, logger)))
+                    .catch(err => logger.error(LOG.ERROR, err));
         })
         .catch((err) => logger.error(LOG.ERROR, err));
 }
@@ -46,15 +45,15 @@ prog
     })
 
     .command('validate', 'Validates local .zel file.')
-    .option('--failFast', 'Terminates on error/invalid repository.')
     .action((args, options, logger) => {
         getLocalDependencies()
             .then((deps) => {
                 new Resolver(options)
-                    .on('valid', (repoName) => logger.info(LOG.VALID, repoName))
-                    .on('invalid', (repoName) => logger.error(LOG.INVALID, repoName))
-                    .on('error', (err) => logger.error(LOG.ERROR, err))
-                    .validate(deps);
+                    .on('valid', (repo) => logger.info(LOG.VALID, repo.repoName))
+                    .on('invalid', (repo) => logger.error(LOG.INVALID, repo.repoName))
+                    .validate(deps)
+                        .catch(err => logger.error(LOG.ERROR, err));
+
             })
             .catch((err) => logger.error(LOG.ERROR, err));
     });
