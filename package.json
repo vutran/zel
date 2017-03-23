@@ -7,7 +7,7 @@
     "zel": "./index.js"
   },
   "scripts": {
-    "lint": "eslint index.js utils",
+    "lint": "eslint index.js lib",
     "test": "npm run lint"
   },
   "keywords": [],

@@ -38,7 +38,7 @@ prog
         logger.info('\r'); // padding
 
         if (args.query) {
-            return clone([repo], logger);
+            return clone([args.query], logger);
         }
 
         return getLocalDependencies()
@@ -54,8 +54,7 @@ prog
                     .on('valid', (repo) => logger.info(LOG.VALID, repo.repoName))
                     .on('invalid', (repo) => logger.error(LOG.INVALID, repo.repoName))
                     .validate(deps)
-                        .catch(err => logger.error(LOG.ERROR, err));
-
+                        .catch((err) => logger.error(LOG.ERROR, err));
             })
             .catch((err) => logger.error(LOG.ERROR, err));
     });
