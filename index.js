@@ -30,16 +30,6 @@ function clone(deps, logger) {
             .catch((err) => logger.error(LOG.ERROR, err));
 }
 
-function init(repo, logger) {
-    clone([ repo ], logger);
-}
-
-function initLocal(logger) {
-    getLocalDependencies()
-        .then((deps) => clone(deps, logger))
-        .catch((err) => logger.error(LOG.ERROR, err));
-}
-
 prog
     .version(version)
 
@@ -48,10 +38,12 @@ prog
         logger.info('\r'); // padding
 
         if (args.query) {
-            return init(args.query, logger);
+            return clone([repo], logger);
         }
 
-        return initLocal(logger);
+        return getLocalDependencies()
+            .then((deps) => clone(deps, logger))
+            .catch((err) => logger.error(LOG.ERROR, err));
     })
 
     .command('validate', 'Validates local .zel file.')
