@@ -8,6 +8,8 @@ const { getLocalDependencies } = require('./lib/local');
 const { LOG } = require('./lib/constants');
 const Resolver = require('./lib/resolver');
 
+const resolver = new Resolver();
+
 function init(repo, logger) {
     downloadRepo(repo)
         .then((arr) => arr.map((file) => `${LOG.SPACER} - ${file}`))
@@ -22,7 +24,7 @@ function init(repo, logger) {
 function initLocal(logger) {
     getLocalDependencies()
         .then((deps) => {
-            new Resolver()
+            resolver
                 .validate(deps)
                     .then(valid => valid.forEach(config => init(config.repoName, logger)))
                     .catch(err => logger.error(LOG.ERROR, err));
@@ -48,7 +50,7 @@ prog
     .action((args, options, logger) => {
         getLocalDependencies()
             .then((deps) => {
-                new Resolver(options)
+                resolver
                     .on('valid', (repo) => logger.info(LOG.VALID, repo.repoName))
                     .on('invalid', (repo) => logger.error(LOG.INVALID, repo.repoName))
                     .validate(deps)
