@@ -12,13 +12,15 @@ const resolver = new Resolver();
 
 function writeLog(entries, logger) {
     entries.forEach((entry) => {
-        const str = entry.config.files
-            .map((file) => `${LOG.SPACER} - ${file}`)
-            .concat('')
-            .join('\n');
+        if (entry.config.files) {
+            const str = entry.config.files
+                .map((file) => `${LOG.SPACER} - ${file}`)
+                .concat('')
+                .join('\n');
 
-        logger.info(LOG.DOWNLOADED, LOG.TITLE(entry.repoName));
-        logger.info(str);
+            logger.info(LOG.DOWNLOADED, LOG.TITLE(entry.repoName));
+            logger.info(str);
+        }
     });
 }
 
