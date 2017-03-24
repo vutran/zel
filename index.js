@@ -3,32 +3,31 @@ global.Promise = require('bluebird');
 
 const prog = require('caporal');
 const { version } = require('./package');
-const { downloadRepo } = require('./lib/repository');
+const { fetchFiles } = require('./lib/repository');
 const { getLocalDependencies } = require('./lib/local');
 const { LOG } = require('./lib/constants');
 const Resolver = require('./lib/resolver');
 
-function init(repo, logger) {
-    downloadRepo(repo)
-        .then((arr) => arr.map((file) => `${LOG.SPACER} - ${file}`))
-        .then((arr) => arr.concat('').join('\n'))
-        .then((str) => {
-            logger.info(LOG.DOWNLOADED, LOG.TITLE(repo));
-            logger.info(str);
-        })
-        .catch((err) => logger.error(LOG.ERROR, err));
+const resolver = new Resolver();
+
+function writeLog(entries, logger) {
+    entries.forEach((entry) => {
+        const str = entry.config.files
+            .map((file) => `${LOG.SPACER} - ${file}`)
+            .concat('')
+            .join('\n');
+
+        logger.info(LOG.DOWNLOADED, LOG.TITLE(entry.repoName));
+        logger.info(str);
+    });
 }
 
-function initLocal(logger) {
-    getLocalDependencies()
-        .then((deps) => {
-            if (!deps.length) {
-                logger.error(LOG.ERROR, 'No local dependencies defined. Please define a repository.');
-                return;
-            }
-            deps.forEach((repo) => init(repo, logger));
-        })
-        .catch((err) => logger.error(LOG.ERROR, err));
+function clone(deps, logger) {
+    resolver
+        .validate(deps)
+            .then((valid) => valid.map((v) => fetchFiles(v.repoName, v.config)))
+            .then((entry) => writeLog(entry, logger))
+            .catch((err) => logger.error(LOG.ERROR, err));
 }
 
 prog
@@ -39,22 +38,23 @@ prog
         logger.info('\r'); // padding
 
         if (args.query) {
-            return init(args.query, logger);
+            return clone([args.query], logger);
         }
 
-        return initLocal(logger);
+        return getLocalDependencies()
+            .then((deps) => clone(deps, logger))
+            .catch((err) => logger.error(LOG.ERROR, err));
     })
 
     .command('validate', 'Validates local .zel file.')
-    .option('--failFast', 'Terminates on error/invalid repository.')
     .action((args, options, logger) => {
         getLocalDependencies()
             .then((deps) => {
-                new Resolver(options)
-                    .on('valid', (repoName) => logger.info(LOG.VALID, repoName))
-                    .on('invalid', (repoName) => logger.error(LOG.INVALID, repoName))
-                    .on('error', (err) => logger.error(LOG.ERROR, err))
-                    .validate(deps);
+                resolver
+                    .on('valid', (repo) => logger.info(LOG.VALID, repo.repoName))
+                    .on('invalid', (repo) => logger.error(LOG.INVALID, repo.repoName))
+                    .validate(deps)
+                        .catch((err) => logger.error(LOG.ERROR, err));
             })
             .catch((err) => logger.error(LOG.ERROR, err));
     });
