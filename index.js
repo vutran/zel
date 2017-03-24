@@ -26,7 +26,7 @@ function writeLog(entries, logger) {
 
 function clone(deps, logger) {
     resolver
-        .on('invalid', (repo) => logger.error(LOG.INVALID, repo.repoName))
+        .on('invalid', repo => logger.error(LOG.INVALID, repo.repoName))
         .validate(deps)
         .then(valid => valid.map(v => fetchFiles(v.repoName, v.config)))
         .then(entry => writeLog(entry, logger))
