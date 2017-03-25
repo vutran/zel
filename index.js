@@ -6,9 +6,9 @@ const { version } = require('./package');
 const { fetchFiles } = require('./lib/repository');
 const { getLocalDependencies } = require('./lib/local');
 const { LOG } = require('./lib/constants');
-const Resolver = require('./lib/resolver');
+const GitHubResolver = require('./lib/resolvers/github');
 
-const resolver = new Resolver();
+const resolver = new GitHubResolver();
 
 function writeLog(entries, logger) {
     entries.forEach(entry => {
