@@ -1,6 +1,7 @@
-const EventEmitter = require('events');
+import EventEmitter from 'events';
+import Promise from 'bluebird';
 
-module.exports = class BaseFetcher extends EventEmitter {
+export default class BaseFetcher extends EventEmitter {
     /**
      * Fetches a configuration file
      *
@@ -9,4 +10,4 @@ module.exports = class BaseFetcher extends EventEmitter {
     fetchConfig() {
         return Promise.reject('Not yet implemented.');
     }
-};
+}

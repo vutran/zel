@@ -1,12 +1,12 @@
 #!/usr/bin/env node
-global.Promise = require('bluebird');
 
-const prog = require('caporal');
-const { version } = require('./package');
-const { fetchFiles } = require('./repository');
-const { getLocalDependencies } = require('./local');
-const { LOG } = require('./constants');
-const GitHubResolver = require('./resolvers/github');
+import prog from 'caporal';
+import Promise from 'bluebird';
+import { version } from '../package';
+import { fetchFiles } from './repository';
+import { getLocalDependencies } from './local';
+import { LOG } from './constants';
+import GitHubResolver from './resolvers/github';
 
 const resolver = new GitHubResolver();
 

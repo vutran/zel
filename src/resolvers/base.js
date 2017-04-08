@@ -1,6 +1,7 @@
-const EventEmitter = require('events');
+import EventEmitter from 'events';
+import Promise from 'bluebird';
 
-module.exports = class BaseResolver extends EventEmitter {
+export default class BaseResolver extends EventEmitter {
     constructor(options) {
         super();
         this.valid = [];
@@ -18,6 +19,6 @@ module.exports = class BaseResolver extends EventEmitter {
      * @return {Promise<Array<Object>>} - Resolves a list of valid/invalid config objects
      */
     validate(list) {
-        Promise.reject('Not yet implemented.');
+        return Promise.reject('Not yet implemented.');
     }
 }

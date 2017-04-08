@@ -1,9 +1,10 @@
-const BaseResolver = require('./base');
-const GitHubFetcher = require('../fetchers/github');
+import Promise from 'bluebird';
+import BaseResolver from './base';
+import GitHubFetcher from '../fetchers/github';
 
 const fetcher = new GitHubFetcher();
 
-module.exports = class GithubResolver extends BaseResolver {
+export default class GithubResolver extends BaseResolver {
     /**
      * Validates the given list of repositories.
      *
@@ -55,4 +56,4 @@ module.exports = class GithubResolver extends BaseResolver {
         }
         return [config];
     }
-};
+}

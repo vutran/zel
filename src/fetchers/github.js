@@ -1,10 +1,11 @@
-const path = require('path');
-const CacheConf = require('cache-conf');
-const { ZEL } = require('../constants');
-const { bufferToJSON, get } = require('../utils');
-const BaseFetcher = require('./base');
+import path from 'path';
+import Promise from 'bluebird';
+import CacheConf from 'cache-conf';
+import { ZEL } from '../constants';
+import { bufferToJSON, get } from '../utils';
+import BaseFetcher from './base';
 
-module.exports = class GitHubFetcher extends BaseFetcher {
+export default class GitHubFetcher extends BaseFetcher {
     /**
      * Retrieve the zel configuration file from the cache if available
      *
@@ -62,4 +63,4 @@ module.exports = class GitHubFetcher extends BaseFetcher {
             })
             .catch(err => Promise.reject(err));
     }
-};
+}

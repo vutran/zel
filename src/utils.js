@@ -1,9 +1,10 @@
-const fs = require('fs');
-const url = require('url');
-const path = require('path');
-const https = require('https');
-const mkdir = require('mkdirp');
-const { name } = require('../package');
+import fs from 'fs';
+import url from 'url';
+import path from 'path';
+import https from 'https';
+import mkdir from 'mkdirp';
+import Promise from 'bluebird';
+import { name } from '../package';
 
 const mkdirp = Promise.promisify(mkdir);
 const writeFile = Promise.promisify(fs.writeFile);
@@ -16,13 +17,13 @@ const writeFile = Promise.promisify(fs.writeFile);
  * @param  {String} filepath - The file's path
  * @return {Object}
  */
-const bufferToJSON = (content, filepath) => {
+export function bufferToJSON(content, filepath) {
     try {
         return JSON.parse(Buffer.from(content, 'base64').toString('utf8'));
     } catch (err) {
         throw `Unexpected token in ${filepath}`;
     }
-};
+}
 
 /**
  * Fetches data from a URI
@@ -31,8 +32,8 @@ const bufferToJSON = (content, filepath) => {
  * @parm {Object} options
  * @return {Promise<String>}
  */
-const get = (uri, options) =>
-    new Promise((resolve, reject) => {
+export function get(uri, options) {
+    return new Promise((resolve, reject) => {
         if (!uri) {
             reject('Invalid URL.');
             return;
@@ -74,6 +75,7 @@ const get = (uri, options) =>
             reject(e);
         });
     });
+}
 
 /**
  * Reads a config file
@@ -81,8 +83,8 @@ const get = (uri, options) =>
  * @param {String} file - The path to the file
  * @return {Promise<Object>} - The file contents as JSON Object
  */
-const getConfig = file =>
-    new Promise((resolve, reject) => {
+export function getConfig(file) {
+    return new Promise((resolve, reject) => {
         fs.readFile(file, (err, buf) => {
             if (err && err.code === 'ENOENT') {
                 return reject(`File does not exist: ${file}`);
@@ -95,6 +97,7 @@ const getConfig = file =>
             }
         });
     });
+}
 
 /**
  * Write to a file with given data.
@@ -104,9 +107,10 @@ const getConfig = file =>
  * @param {String} data - The data to write.
  * @param {Object} opts - See `fs.writeFile`.
  */
-const write = Promise.method((file, data, opts) => {
+export const write = Promise.method((file, data, opts) => {
     file = path.normalize(file);
     const dirs = path.dirname(file);
+    console.log(file, dirs);
     return mkdirp(dirs).then(() => writeFile(file, data, opts));
 });
 
@@ -117,7 +121,7 @@ const write = Promise.method((file, data, opts) => {
  * @param {String} branch
  * @param {String} file
  */
-const sync = (repo, branch, file) => {
+export function sync(repo, branch, file) {
     const uri = `https://raw.githubusercontent.com/${repo}/${branch}/${file}`;
     https.get(uri, resp => {
         if (resp.statusCode !== 200) {
@@ -129,11 +133,4 @@ const sync = (repo, branch, file) => {
         });
         resp.on('end', () => write(file, data));
     });
-};
-
-module.exports = {
-    bufferToJSON,
-    get,
-    getConfig,
-    sync,
-};
+}

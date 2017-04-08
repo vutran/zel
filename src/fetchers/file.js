@@ -1,5 +1,5 @@
-const BaseFetcher = require('./base');
+import BaseFetcher from './base';
 
-module.exports = class FileFetcher extends BaseFetcher {
+export default class FileFetcher extends BaseFetcher {
     // TODO
 }

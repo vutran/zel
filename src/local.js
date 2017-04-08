@@ -1,20 +1,18 @@
-const path = require('path');
-const { ZEL } = require('./constants');
-const { getConfig } = require('./utils');
+import path from 'path';
+import Promise from 'bluebird';
+import { ZEL } from './constants';
+import { getConfig } from './utils';
 
 /**
  * Gets `dependencies` from a local `.zel`, if any
  *
  * @return {Promise<String[]>} - The list of local dependencies
  */
-const getLocalDependencies = () =>
-    new Promise((resolve, reject) => {
+export function getLocalDependencies() {
+    return new Promise((resolve, reject) => {
         const dotfile = path.resolve(ZEL.FILE);
         getConfig(dotfile)
             .then(data => resolve(data.dependencies || []))
             .catch(err => reject(err));
     });
-
-module.exports = {
-    getLocalDependencies,
-};
+}
