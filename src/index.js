@@ -3,10 +3,10 @@ global.Promise = require('bluebird');
 
 const prog = require('caporal');
 const { version } = require('./package');
-const { fetchFiles } = require('./lib/repository');
-const { getLocalDependencies } = require('./lib/local');
-const { LOG } = require('./lib/constants');
-const GitHubResolver = require('./lib/resolvers/github');
+const { fetchFiles } = require('./repository');
+const { getLocalDependencies } = require('./local');
+const { LOG } = require('./constants');
+const GitHubResolver = require('./resolvers/github');
 
 const resolver = new GitHubResolver();
 
