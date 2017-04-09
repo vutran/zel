@@ -1,4 +1,6 @@
 // @flow
+
+import type { ZelConfig } from './config';
 import fs from 'fs';
 import url from 'url';
 import path from 'path';
@@ -14,8 +16,8 @@ const writeFile = Promise.promisify(fs.writeFile);
  * Parse a (`.zel`) file's base64 string as JSON.
  * Customizes handler for `Unexpected Token` error
  *
- * @param  {Buffer} content - The file's contents
- * @param  {string} filepath - The file's path
+ * @param Buffer} content - The file's contents
+ * @param {string} filepath - The file's path
  * @return {Object}
  */
 export function bufferToJSON(content: Buffer, filepath: string): Object {
@@ -82,16 +84,16 @@ export function get<T: any>(uri: string, options: any): Promise<T> {
  * Reads a config file
  *
  * @param {string} file - The path to the file
- * @return {Promise<Object>} - The file contents as JSON Object
+ * @return {Promise<ZelConfig>} - The file contents as JSON Object
  */
-export function getConfig(file: string): Promise<Object> {
+export function getConfig(file: string): Promise<ZelConfig> {
     return new Promise((resolve, reject) => {
         fs.readFile(file, (err, buf) => {
             if (err && err.code === 'ENOENT') {
                 return reject(`File does not exist: ${file}`);
             }
             try {
-                const data = bufferToJSON(buf, file);
+                const data = (bufferToJSON(buf, file): ZelConfig);
                 resolve(data);
             } catch (msg) {
                 reject(msg);

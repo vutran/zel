@@ -1,5 +1,6 @@
 // @flow
 
+import type { ZelConfig } from '../config';
 import path from 'path';
 import Promise from 'bluebird';
 import CacheConf from 'cache-conf';
@@ -13,29 +14,29 @@ export default class GitHubFetcher extends BaseFetcher {
      *
      * @param {string} repoName - The repo name
      * @param {CacheConf} store - The cache instance
-     * @return {Object|boolean} - The config object if available
+     * @return {ZelConfig|boolean} - The config object if available
      */
-    fetchFromCache(repoName: string, store: CacheConf): Object | boolean {
+    fetchFromCache(repoName: string, store: CacheConf): ZelConfig | boolean {
         if (!store.has('config') || store.isExpired('config')) {
             return false;
         }
 
-        return store.get('config') || false;
+        return (store.get('config'): ZelConfig) || false;
     }
 
     /**
      * Fetches the zel configuration file from the GitHub repository.
      *
      * @param {string} repoName - The repo name
-     * @return {Promise<Object>} - The configuration object
+     * @return {Promise<ZelConfig>} - The configuration object
      */
-    fetchFromRemote(repoName: string): Promise<Object> {
+    fetchFromRemote(repoName: string): Promise<ZelConfig> {
         return get(`https://api.github.com/repos/${repoName}/contents/${ZEL.FILE}`)
             .then(resp => {
                 if (resp.message === 'Not Found') {
                     return Promise.reject(`${repoName} not found.`);
                 }
-                return bufferToJSON(resp.content, `"${ZEL.FILE}" from ${repoName}`);
+                return (bufferToJSON(resp.content, `"${ZEL.FILE}" from ${repoName}`): ZelConfig);
             })
             .catch(err => Promise.reject(err));
     }
@@ -44,9 +45,9 @@ export default class GitHubFetcher extends BaseFetcher {
      * Fetches the zel configuration file from cache, or GitHub API
      *
      * @param {string} repoName - The repo name
-     * @return {Promise<Object>} - The configuration object
+     * @return {Promise<ZelConfig>} - The configuration object
      */
-    fetchConfig(repoName: string): Promise<any> {
+    fetchConfig(repoName: string): Promise<ZelConfig> {
         const cache = new CacheConf({
             configName: ZEL.FILE,
             cwd: path.join(ZEL.CACHEDIR, repoName),
@@ -55,7 +56,7 @@ export default class GitHubFetcher extends BaseFetcher {
         let config = this.fetchFromCache(repoName, cache);
 
         if (config) {
-            return Promise.resolve(config);
+            return Promise.resolve((config: ZelConfig));
         }
 
         return this.fetchFromRemote(repoName)

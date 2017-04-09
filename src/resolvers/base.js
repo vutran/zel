@@ -1,11 +1,17 @@
 // @flow
 
+import type { ZelConfig } from '../config';
 import EventEmitter from 'events';
 import Promise from 'bluebird';
 
+export interface ResolvedZelConfig {
+    repoName: string;
+    config?: ZelConfig;
+}
+
 export default class BaseResolver extends EventEmitter {
-    valid: Array<string>;
-    invalid: Array<string>;
+    valid: Array<ResolvedZelConfig>;
+    invalid: Array<ResolvedZelConfig>;
     opts: any;
 
     constructor(options: any) {
@@ -22,9 +28,9 @@ export default class BaseResolver extends EventEmitter {
      * of the list of invalid item.
      *
      * @param {Array<string>} - List of inputs
-     * @return {Promise<Array<Object>>} - Resolves a list of valid/invalid config objects
+     * @return {Promise<Array<ResolvedZelConfig>>} - Resolves a list of resolved valid/invalid config objects
      */
-    validate(list: Array<string>): Promise<Array<any>> {
+    validate(list: Array<string>): Promise<Array<ResolvedZelConfig>> {
         return Promise.reject('Not yet implemented.');
     }
 }

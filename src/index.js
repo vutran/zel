@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 
+import type { ZelConfig } from './config';
 import prog from 'caporal';
 import Promise from 'bluebird';
 import { version } from '../package';
@@ -24,9 +25,9 @@ function writeLog(entries, logger) {
     });
 }
 
-function clone(deps, logger) {
+function clone(deps: Array<string>, logger) {
     resolver
-        .on('invalid', repo => logger.error(LOG.INVALID, repo.repoName))
+        .on('invalid', (config: ZelConfig) => logger.error(LOG.INVALID, config.repoName))
         .validate(deps)
         .then(valid => valid.map(v => fetchFiles(v.repoName, v.config)))
         .then(entry => writeLog(entry, logger))

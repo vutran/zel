@@ -1,3 +1,5 @@
+// @flow
+
 import { homedir } from 'os';
 import { join } from 'path';
 import chalk from 'chalk';
