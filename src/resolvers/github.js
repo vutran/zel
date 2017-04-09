@@ -34,7 +34,7 @@ export default class GithubResolver extends BaseResolver {
     /**
      * Fetch the repository and store to approriate list
      *
-     * @param {String} repoName - The repository name
+     * @param {string} repoName - The repository name
      * @return {Promise<Object>} - Resolves the zel config object
      */
     fetch(repoName) {
