@@ -8,7 +8,7 @@ import { getConfig } from './utils';
 /**
  * Gets `dependencies` from a local `.zel`, if any
  *
- * @return {Promise<string[]>} - The list of local dependencies
+ * @return {Promise<Array<string>>} - The list of local dependencies
  */
 export function getLocalDependencies() {
     return new Promise((resolve, reject) => {
