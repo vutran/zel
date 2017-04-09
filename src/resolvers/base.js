@@ -1,8 +1,14 @@
+// @flow
+
 import EventEmitter from 'events';
 import Promise from 'bluebird';
 
 export default class BaseResolver extends EventEmitter {
-    constructor(options) {
+    valid: Array<string>;
+    invalid: Array<string>;
+    opts: any;
+
+    constructor(options: any) {
         super();
         this.valid = [];
         this.invalid = [];
@@ -15,10 +21,10 @@ export default class BaseResolver extends EventEmitter {
      * If any item is invalid, should return a rejected Promise
      * of the list of invalid item.
      *
-     * @param {Array<String>} - List of inputs
+     * @param {Array<string>} - List of inputs
      * @return {Promise<Array<Object>>} - Resolves a list of valid/invalid config objects
      */
-    validate(list) {
+    validate(list: Array<string>): Promise<Array<any>> {
         return Promise.reject('Not yet implemented.');
     }
 }

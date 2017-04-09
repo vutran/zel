@@ -1,3 +1,5 @@
+// @flow
+
 import EventEmitter from 'events';
 import Promise from 'bluebird';
 
@@ -5,9 +7,10 @@ export default class BaseFetcher extends EventEmitter {
     /**
      * Fetches a configuration file
      *
-     * @return {Object}
+     * @param {string} repoName
+     * @return {Promise<Object>}
      */
-    fetchConfig() {
+    fetchConfig(repoName: string): Promise<any> {
         return Promise.reject('Not yet implemented.');
     }
 }

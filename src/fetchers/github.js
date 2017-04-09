@@ -1,3 +1,5 @@
+// @flow
+
 import path from 'path';
 import Promise from 'bluebird';
 import CacheConf from 'cache-conf';
@@ -9,11 +11,11 @@ export default class GitHubFetcher extends BaseFetcher {
     /**
      * Retrieve the zel configuration file from the cache if available
      *
-     * @param {String} repoName - The repo name
+     * @param {string} repoName - The repo name
      * @param {CacheConf} store - The cache instance
-     * @return {Object|Boolean} - The config object if available
+     * @return {Object|boolean} - The config object if available
      */
-    fetchFromCache(repoName, store) {
+    fetchFromCache(repoName: string, store: CacheConf): Object | boolean {
         if (!store.has('config') || store.isExpired('config')) {
             return false;
         }
@@ -24,10 +26,10 @@ export default class GitHubFetcher extends BaseFetcher {
     /**
      * Fetches the zel configuration file from the GitHub repository.
      *
-     * @param {String} repoName - The repo name
+     * @param {string} repoName - The repo name
      * @return {Promise<Object>} - The configuration object
      */
-    fetchFromRemote(repoName) {
+    fetchFromRemote(repoName: string): Promise<Object> {
         return get(`https://api.github.com/repos/${repoName}/contents/${ZEL.FILE}`)
             .then(resp => {
                 if (resp.message === 'Not Found') {
@@ -41,10 +43,10 @@ export default class GitHubFetcher extends BaseFetcher {
     /**
      * Fetches the zel configuration file from cache, or GitHub API
      *
-     * @param {String} repoName - The repo name
+     * @param {string} repoName - The repo name
      * @return {Promise<Object>} - The configuration object
      */
-    fetchConfig(repoName) {
+    fetchConfig(repoName: string): Promise<any> {
         const cache = new CacheConf({
             configName: ZEL.FILE,
             cwd: path.join(ZEL.CACHEDIR, repoName),

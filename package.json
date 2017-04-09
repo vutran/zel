@@ -11,7 +11,7 @@
     "flow": "flow",
     "prepublish": "npm run build",
     "precommit": "npm run lint",
-    "lint": "prettier --single-quote --trailing-comma=es5 --print-width=90 --tab-width=4 --write 'src/*.js' 'index.js'",
+    "lint": "prettier --parser=flow --single-quote --trailing-comma=es5 --print-width=90 --tab-width=4 --write 'src/*.js' 'index.js'",
     "test": "npm run lint"
   },
   "keywords": [],
@@ -29,6 +29,7 @@
     "babel-preset-es2015": "^6.24.1",
     "babel-preset-flow": "^6.23.0",
     "flow-bin": "^0.43.1",
+    "flow-typed": "^2.0.0",
     "husky": "^0.13.2",
     "prettier": "^0.22.0"
   }

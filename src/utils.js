@@ -1,3 +1,4 @@
+// @flow
 import fs from 'fs';
 import url from 'url';
 import path from 'path';
@@ -14,10 +15,10 @@ const writeFile = Promise.promisify(fs.writeFile);
  * Customizes handler for `Unexpected Token` error
  *
  * @param  {Buffer} content - The file's contents
- * @param  {String} filepath - The file's path
+ * @param  {string} filepath - The file's path
  * @return {Object}
  */
-export function bufferToJSON(content, filepath) {
+export function bufferToJSON(content: Buffer, filepath: string): Object {
     try {
         return JSON.parse(Buffer.from(content, 'base64').toString('utf8'));
     } catch (err) {
@@ -28,11 +29,11 @@ export function bufferToJSON(content, filepath) {
 /**
  * Fetches data from a URI
  *
- * @param {String} uri
- * @parm {Object} options
- * @return {Promise<String>}
+ * @param {string} uri
+ * @param {Object} options
+ * @return {Promise<T>}
  */
-export function get(uri, options) {
+export function get<T: any>(uri: string, options: any): Promise<T> {
     return new Promise((resolve, reject) => {
         if (!uri) {
             reject('Invalid URL.');
@@ -80,10 +81,10 @@ export function get(uri, options) {
 /**
  * Reads a config file
  *
- * @param {String} file - The path to the file
+ * @param {string} file - The path to the file
  * @return {Promise<Object>} - The file contents as JSON Object
  */
-export function getConfig(file) {
+export function getConfig(file: string): Promise<Object> {
     return new Promise((resolve, reject) => {
         fs.readFile(file, (err, buf) => {
             if (err && err.code === 'ENOENT') {
@@ -103,25 +104,24 @@ export function getConfig(file) {
  * Write to a file with given data.
  * Creates ancestor directories if needed.
  *
- * @param {String} file - The full file"s path.
- * @param {String} data - The data to write.
+ * @param {string} file - The full file"s path.
+ * @param {string} data - The data to write.
  * @param {Object} opts - See `fs.writeFile`.
  */
-export const write = Promise.method((file, data, opts) => {
+export const write = Promise.method((file: string, data: string, opts: any) => {
     file = path.normalize(file);
     const dirs = path.dirname(file);
-    console.log(file, dirs);
     return mkdirp(dirs).then(() => writeFile(file, data, opts));
 });
 
 /**
  * Downloads the contents from the given repo file path components.
  *
- * @param {String} repo
- * @param {String} branch
- * @param {String} file
+ * @param {string} repo
+ * @param {string} branch
+ * @param {string} file
  */
-export function sync(repo, branch, file) {
+export function sync(repo: string, branch: string, file: string) {
     const uri = `https://raw.githubusercontent.com/${repo}/${branch}/${file}`;
     https.get(uri, resp => {
         if (resp.statusCode !== 200) {

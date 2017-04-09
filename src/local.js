@@ -1,3 +1,5 @@
+// @flow
+
 import path from 'path';
 import Promise from 'bluebird';
 import { ZEL } from './constants';
@@ -6,7 +8,7 @@ import { getConfig } from './utils';
 /**
  * Gets `dependencies` from a local `.zel`, if any
  *
- * @return {Promise<String[]>} - The list of local dependencies
+ * @return {Promise<string[]>} - The list of local dependencies
  */
 export function getLocalDependencies() {
     return new Promise((resolve, reject) => {

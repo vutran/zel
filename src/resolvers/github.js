@@ -15,10 +15,10 @@ export default class GithubResolver extends BaseResolver {
      * If any repository is invalid, should return a rejected Promise
      * of the list of invalid repositories.
      *
-     * @param {Array<String>} - List of repositories
+     * @param {Array<string>} - List of repositories
      * @return {Promise<Array<Object>>} - Resolves a list of valid/invalid config objects
      */
-    validate(repos) {
+    validate(repos: Array<string>): Promise<Array<any>> {
         if (!repos || !repos.length) {
             return Promise.reject('No repositories specified.');
         }
