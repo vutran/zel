@@ -2,9 +2,7 @@
 
 import type { ZelConfig } from './config';
 import type { ResolvedZelConfig } from './resolvers/base';
-import { join } from 'path';
-import { ZEL } from './constants';
-import { bufferToJSON, get, sync } from './utils';
+import { sync } from './utils';
 
 /**
  * Fetch the list of files in the given repository,
