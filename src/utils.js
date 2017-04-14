@@ -1,9 +1,13 @@
-const fs = require('fs');
-const url = require('url');
-const path = require('path');
-const https = require('https');
-const mkdir = require('mkdirp');
-const { name } = require('../package');
+// @flow
+
+import type { ZelConfig } from './config';
+import fs from 'fs';
+import url from 'url';
+import path from 'path';
+import https from 'https';
+import mkdir from 'mkdirp';
+import Promise from 'bluebird';
+import { name } from '../package';
 
 const mkdirp = Promise.promisify(mkdir);
 const writeFile = Promise.promisify(fs.writeFile);
@@ -12,27 +16,27 @@ const writeFile = Promise.promisify(fs.writeFile);
  * Parse a (`.zel`) file's base64 string as JSON.
  * Customizes handler for `Unexpected Token` error
  *
- * @param  {Buffer} content - The file's contents
- * @param  {String} filepath - The file's path
+ * @param Buffer} content - The file's contents
+ * @param {string} filepath - The file's path
  * @return {Object}
  */
-const bufferToJSON = (content, filepath) => {
+export function bufferToJSON(content: Buffer, filepath: string): Object {
     try {
         return JSON.parse(Buffer.from(content, 'base64').toString('utf8'));
     } catch (err) {
         throw `Unexpected token in ${filepath}`;
     }
-};
+}
 
 /**
  * Fetches data from a URI
  *
- * @param {String} uri
- * @parm {Object} options
- * @return {Promise<String>}
+ * @param {string} uri
+ * @param {Object} options
+ * @return {Promise<T>}
  */
-const get = (uri, options) =>
-    new Promise((resolve, reject) => {
+export function get<T: any>(uri: string, options: any): Promise<T> {
+    return new Promise((resolve, reject) => {
         if (!uri) {
             reject('Invalid URL.');
             return;
@@ -74,37 +78,39 @@ const get = (uri, options) =>
             reject(e);
         });
     });
+}
 
 /**
  * Reads a config file
  *
- * @param {String} file - The path to the file
- * @return {Promise<Object>} - The file contents as JSON Object
+ * @param {string} file - The path to the file
+ * @return {Promise<ZelConfig>} - The file contents as JSON Object
  */
-const getConfig = file =>
-    new Promise((resolve, reject) => {
+export function getConfig(file: string): Promise<ZelConfig> {
+    return new Promise((resolve, reject) => {
         fs.readFile(file, (err, buf) => {
             if (err && err.code === 'ENOENT') {
                 return reject(`File does not exist: ${file}`);
             }
             try {
-                const data = bufferToJSON(buf, file);
+                const data = (bufferToJSON(buf, file): ZelConfig);
                 resolve(data);
             } catch (msg) {
                 reject(msg);
             }
         });
     });
+}
 
 /**
  * Write to a file with given data.
  * Creates ancestor directories if needed.
  *
- * @param {String} file - The full file"s path.
- * @param {String} data - The data to write.
+ * @param {string} file - The full file"s path.
+ * @param {string} data - The data to write.
  * @param {Object} opts - See `fs.writeFile`.
  */
-const write = Promise.method((file, data, opts) => {
+export const write = Promise.method((file: string, data: string, opts: any) => {
     file = path.normalize(file);
     const dirs = path.dirname(file);
     return mkdirp(dirs).then(() => writeFile(file, data, opts));
@@ -113,11 +119,11 @@ const write = Promise.method((file, data, opts) => {
 /**
  * Downloads the contents from the given repo file path components.
  *
- * @param {String} repo
- * @param {String} branch
- * @param {String} file
+ * @param {string} repo
+ * @param {string} branch
+ * @param {string} file
  */
-const sync = (repo, branch, file) => {
+export function sync(repo: string, branch: string, file: string) {
     const uri = `https://raw.githubusercontent.com/${repo}/${branch}/${file}`;
     https.get(uri, resp => {
         if (resp.statusCode !== 200) {
@@ -129,11 +135,4 @@ const sync = (repo, branch, file) => {
         });
         resp.on('end', () => write(file, data));
     });
-};
-
-module.exports = {
-    bufferToJSON,
-    get,
-    getConfig,
-    sync,
-};
+}

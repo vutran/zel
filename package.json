@@ -2,13 +2,16 @@
   "name": "zel",
   "version": "0.1.0",
   "description": "zel is small, and simple command-line tool that helps kickstart new projects.",
-  "main": "index.js",
+  "main": "./lib/index.js",
   "bin": {
-    "zel": "./index.js"
+    "zel": "./lib/index.js"
   },
   "scripts": {
+    "build": "babel src/ -d lib/",
+    "flow": "flow",
+    "prepublish": "npm run build",
     "precommit": "npm run lint",
-    "lint": "prettier --single-quote --trailing-comma=es5 --print-width=90 --tab-width=4 --write 'lib/*.js' 'index.js'",
+    "lint": "prettier --parser=flow --single-quote --trailing-comma=es5 --print-width=90 --tab-width=4 --write 'src/*.js' 'index.js'",
     "test": "npm run lint"
   },
   "keywords": [],
@@ -22,6 +25,11 @@
     "mkdirp": "^0.5.1"
   },
   "devDependencies": {
+    "babel-cli": "^6.24.1",
+    "babel-preset-es2015": "^6.24.1",
+    "babel-preset-flow": "^6.23.0",
+    "flow-bin": "^0.43.1",
+    "flow-typed": "^2.0.0",
     "husky": "^0.13.2",
     "prettier": "^0.22.0"
   }

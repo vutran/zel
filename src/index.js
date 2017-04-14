@@ -1,12 +1,13 @@
 #!/usr/bin/env node
-global.Promise = require('bluebird');
 
-const prog = require('caporal');
-const { version } = require('./package');
-const { fetchFiles } = require('./lib/repository');
-const { getLocalDependencies } = require('./lib/local');
-const { LOG } = require('./lib/constants');
-const GitHubResolver = require('./lib/resolvers/github');
+import type { ZelConfig } from './config';
+import prog from 'caporal';
+import Promise from 'bluebird';
+import { version } from '../package';
+import { fetchFiles } from './repository';
+import { getLocalDependencies } from './local';
+import { LOG } from './constants';
+import GitHubResolver from './resolvers/github';
 
 const resolver = new GitHubResolver();
 
@@ -24,9 +25,9 @@ function writeLog(entries, logger) {
     });
 }
 
-function clone(deps, logger) {
+function clone(deps: Array<string>, logger) {
     resolver
-        .on('invalid', repo => logger.error(LOG.INVALID, repo.repoName))
+        .on('invalid', (config: ZelConfig) => logger.error(LOG.INVALID, config.repoName))
         .validate(deps)
         .then(valid => valid.map(v => fetchFiles(v.repoName, v.config)))
         .then(entry => writeLog(entry, logger))
