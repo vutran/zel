@@ -14,8 +14,7 @@ function writeLog(entries, logger) {
         if (entry.config.files) {
             const str = entry.config.files
                 .map(file => `${LOG.SPACER} - ${file}`)
-                .concat('')
-                .join('\n');
+                .join('');
 
             logger.info(LOG.DOWNLOADED, LOG.TITLE(entry.repoName));
             logger.info(str);
@@ -43,7 +42,7 @@ prog
     .action((args, options, logger) => {
         const resolver = new GitHubResolver({ token: options.token });
 
-        logger.info('\r'); // padding
+        logger.info(); // padding
 
         if (args.query) {
             return clone([args.query], logger, resolver);
