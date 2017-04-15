@@ -1,9 +1,14 @@
 // @flow
-import type { ZelConfig } from '../types';
+import type { ZelConfig, FetchOptions } from '../types';
 const EventEmitter = require('events');
 const Promise = require('bluebird');
 
 class BaseFetcher extends EventEmitter {
+    constructor(options: FetchOptions) {
+        super();
+        this.options = options;
+    }
+
     /**
      * Fetches a configuration file
      *

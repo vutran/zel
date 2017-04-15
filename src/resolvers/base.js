@@ -1,5 +1,5 @@
 // @flow
-import type { ZelConfig } from '../types';
+import type { ZelConfig, ValidateOptions } from '../types';
 const EventEmitter = require('events');
 const Promise = require('bluebird');
 
@@ -8,7 +8,7 @@ class BaseResolver extends EventEmitter {
     invalid: Array<ResolvedZelConfig>;
     opts: any;
 
-    constructor(options: any) {
+    constructor(options: ValidateOptions) {
         super();
         this.valid = [];
         this.invalid = [];

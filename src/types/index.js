@@ -10,3 +10,11 @@ export interface ResolvedZelConfig {
     repoName: string;
     config?: ZelConfig;
 }
+
+export interface FetchOptions {
+    token?: string;
+}
+
+export interface ValidateOptions {
+    token?: string;
+}

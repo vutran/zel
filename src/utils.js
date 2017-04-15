@@ -37,6 +37,8 @@ function bufferToJSON(content: Buffer, filepath: string): Object {
  * @return {Promise<T>}
  */
 function get<T: any>(uri: string, options: any): Promise<T> {
+    const token = options && options.token;
+    token && (headers.Authorization = `token ${token}`);
     const opts = Object.assign({ headers }, options);
     return fetch(uri, opts).then(res => res.json());
 }
@@ -61,8 +63,11 @@ async function getConfig(file: string): Promise<ZelConfig> {
  * @return {Promise<T>}
  */
 async function sync(repo: string, branch: string, file: string): Promise<T> {
-    const uri = `https://raw.githubusercontent.com/${repo}/${branch}/${file}`;
-    const data = await get(uri); // throw `Trouble while fetching ${repo}/${branch}/${file}.`;
+    const info = `${repo}/${branch}/${file}`;
+    const uri = `https://raw.githubusercontent.com/${info}`;
+    const data = await get(uri).catch(err => {
+        throw `Trouble while fetching ${info}.`;
+    });
     return write(file, data);
 }
 
