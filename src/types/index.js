@@ -6,3 +6,8 @@ export interface ZelConfig {
     // List of zel projects that this project depends on.
     dependencies?: Array<string>,
 }
+
+export interface ResolvedZelConfig {
+    repoName: string;
+    config?: ZelConfig;
+}

@@ -1,7 +1,6 @@
 // @flow
 
-import type { ZelConfig } from '../config';
-import type { ResolvedZelConfig } from './base';
+import type { ZelConfig, ResolvedZelConfig } from '../types';
 import Promise from 'bluebird';
 import BaseResolver from './base';
 import GitHubFetcher from '../fetchers/github';

@@ -1,28 +1,19 @@
 // @flow
 
-import type { ZelConfig } from '../config';
+import type { ZelConfig } from '../types';
 import EventEmitter from 'events';
 import Promise from 'bluebird';
-
-export interface ResolvedZelConfig {
-    repoName: string;
-    config?: ZelConfig;
-}
-
-interface ValidateOptions {
-    // add options here...
-}
 
 export default class BaseResolver extends EventEmitter {
     valid: Array<ResolvedZelConfig>;
     invalid: Array<ResolvedZelConfig>;
-    options: ValidateOptions;
+    opts: any;
 
-    constructor(options: ValidateOptions) {
+    constructor(options: any) {
         super();
-        this.options = options || {};
         this.valid = [];
         this.invalid = [];
+        this.opts = options || {};
     }
 
     /**

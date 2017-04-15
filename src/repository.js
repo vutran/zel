@@ -1,7 +1,6 @@
 // @flow
 
-import type { ZelConfig } from './config';
-import type { ResolvedZelConfig } from './resolvers/base';
+import type { ZelConfig, ResolvedZelConfig } from './types';
 import { sync } from './utils';
 
 /**

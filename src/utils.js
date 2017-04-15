@@ -1,6 +1,6 @@
 // @flow
 
-import type { ZelConfig } from './config';
+import type { ZelConfig } from './types';
 import fs from 'fs';
 import url from 'url';
 import path from 'path';

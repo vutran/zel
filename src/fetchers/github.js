@@ -1,6 +1,6 @@
 // @flow
 
-import type { ZelConfig } from '../config';
+import type { ZelConfig } from '../types';
 import path from 'path';
 import Promise from 'bluebird';
 import CacheConf from 'cache-conf';
