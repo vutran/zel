@@ -1,5 +1,4 @@
 // @flow
-
 import type { ZelConfig } from '../types';
 import BaseFetcher from './base';
 

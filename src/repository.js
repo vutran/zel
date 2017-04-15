@@ -1,5 +1,4 @@
 // @flow
-
 import type { ZelConfig, ResolvedZelConfig } from './types';
 import { sync } from './utils';
 

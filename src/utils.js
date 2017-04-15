@@ -1,5 +1,4 @@
 // @flow
-
 import type { ZelConfig } from './types';
 import { dirname, normalize } from 'path';
 import { readFile, writeFile } from 'fs';

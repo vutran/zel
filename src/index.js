@@ -1,5 +1,4 @@
 #!/usr/bin/env node
-
 import type { ZelConfig } from './config';
 import prog from 'caporal';
 import Promise from 'bluebird';

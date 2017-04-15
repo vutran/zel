@@ -1,5 +1,4 @@
 // @flow
-
 import path from 'path';
 import Promise from 'bluebird';
 import { ZEL } from './constants';

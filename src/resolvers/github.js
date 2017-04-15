@@ -1,5 +1,4 @@
 // @flow
-
 import type { ZelConfig, ResolvedZelConfig } from '../types';
 import Promise from 'bluebird';
 import BaseResolver from './base';
