@@ -9,8 +9,6 @@ import { getLocalDependencies } from './local';
 import { LOG } from './constants';
 import GitHubResolver from './resolvers/github';
 
-const resolver = new GitHubResolver();
-
 function writeLog(entries, logger) {
     entries.forEach(entry => {
         if (entry.config.files) {
@@ -25,10 +23,10 @@ function writeLog(entries, logger) {
     });
 }
 
-function clone(deps: Array<string>, logger, token: string) {
+function clone(deps: Array<string>, logger, resolver: BaseResolver) {
     resolver
         .on('invalid', (config: ZelConfig) => logger.error(LOG.INVALID, config.repoName))
-        .validate(deps, { token })
+        .validate(deps)
         .then(valid => valid.map(v => fetchFiles(v.repoName, v.config)))
         .then(entry => writeLog(entry, logger))
         .catch(err => logger.error(LOG.ERROR, err));
@@ -43,14 +41,16 @@ prog
         prog.STRING
     )
     .action((args, options, logger) => {
+        const resolver = new GitHubResolver({ token: options.token });
+
         logger.info('\r'); // padding
 
         if (args.query) {
-            return clone([args.query], logger, options.token);
+            return clone([args.query], logger, resolver);
         }
 
         return getLocalDependencies()
-            .then(deps => clone(deps, logger, options.token))
+            .then(deps => clone(deps, logger, resolver))
             .catch(err => logger.error(LOG.ERROR, err));
     })
     .command('validate', 'Validates local .zel file.')
@@ -60,13 +60,13 @@ prog
         prog.STRING
     )
     .action((args, options, logger) => {
-        const token = options.token;
+        const resolver = new GitHubResolver({ token: options.token });
         getLocalDependencies()
             .then(deps => {
                 resolver
                     .on('valid', repo => logger.info(LOG.VALID, repo.repoName))
                     .on('invalid', repo => logger.error(LOG.INVALID, repo.repoName))
-                    .validate(deps, { token })
+                    .validate(deps)
                     .catch(err => logger.error(LOG.ERROR, err));
             })
             .catch(err => logger.error(LOG.ERROR, err));
