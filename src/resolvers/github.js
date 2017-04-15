@@ -8,11 +8,8 @@ class GithubResolver extends BaseResolver {
     constructor(options: ValidateOptions) {
         super(options);
 
-        const fetcherOptions = {
-            token: options ? options.token : null,
-        };
-
-        this.fetcher = new GitHubFetcher(fetcherOptions);
+        const token = options.token;
+        this.fetcher = new GitHubFetcher({ token });
     }
 
     /**

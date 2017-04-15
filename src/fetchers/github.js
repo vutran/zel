@@ -37,9 +37,7 @@ class GitHubFetcher extends BaseFetcher {
      */
     fetchFromRemote(repoName: string): Promise<ZelConfig> {
         const token = this.options.token;
-        const opts = token ? { token } : {};
-
-        return get(`https://api.github.com/repos/${repoName}/contents/${ZEL.FILE}`, opts)
+        return get(`https://api.github.com/repos/${repoName}/contents/${ZEL.FILE}`, { token })
             .then(resp => {
                 if (resp.message === 'Not Found') {
                     return Promise.reject(`${repoName} not found.`);
