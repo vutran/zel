@@ -9,16 +9,20 @@ export interface ResolvedZelConfig {
     config?: ZelConfig;
 }
 
+interface ValidateOptions {
+    // add options here...
+}
+
 export default class BaseResolver extends EventEmitter {
     valid: Array<ResolvedZelConfig>;
     invalid: Array<ResolvedZelConfig>;
-    opts: any;
+    options: ValidateOptions;
 
-    constructor(options: any) {
+    constructor(options: ValidateOptions) {
         super();
+        this.options = options || {};
         this.valid = [];
         this.invalid = [];
-        this.opts = options || {};
     }
 
     /**

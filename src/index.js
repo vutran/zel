@@ -9,8 +9,6 @@ import { getLocalDependencies } from './local';
 import { LOG } from './constants';
 import GitHubResolver from './resolvers/github';
 
-const resolver = new GitHubResolver();
-
 function writeLog(entries, logger) {
     entries.forEach(entry => {
         if (entry.config.files) {
@@ -25,7 +23,7 @@ function writeLog(entries, logger) {
     });
 }
 
-function clone(deps: Array<string>, logger) {
+function clone(deps: Array<string>, logger, resolver: BaseResolver) {
     resolver
         .on('invalid', (config: ZelConfig) => logger.error(LOG.INVALID, config.repoName))
         .validate(deps)
@@ -37,19 +35,32 @@ function clone(deps: Array<string>, logger) {
 prog
     .version(version)
     .argument('[query]', 'Specify the repository to fetch.')
+    .option(
+        '--token <token>',
+        'Specify a GitHub token for fetch private repository.',
+        prog.STRING
+    )
     .action((args, options, logger) => {
+        const resolver = new GitHubResolver({ token: options.token });
+
         logger.info('\r'); // padding
 
         if (args.query) {
-            return clone([args.query], logger);
+            return clone([args.query], logger, resolver);
         }
 
         return getLocalDependencies()
-            .then(deps => clone(deps, logger))
+            .then(deps => clone(deps, logger, resolver))
             .catch(err => logger.error(LOG.ERROR, err));
     })
     .command('validate', 'Validates local .zel file.')
+    .option(
+        '--token <token>',
+        'Specify a GitHub token for fetch private repository.',
+        prog.STRING
+    )
     .action((args, options, logger) => {
+        const resolver = new GitHubResolver({ token: options.token });
         getLocalDependencies()
             .then(deps => {
                 resolver

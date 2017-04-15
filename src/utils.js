@@ -42,7 +42,13 @@ export function get<T: any>(uri: string, options: any): Promise<T> {
             return;
         }
 
-        const opts = Object.assign({ json: true }, options);
+        const opts = Object.assign(
+            {
+                json: false,
+                token: null,
+            },
+            options
+        );
 
         const u = url.parse(uri);
         const reqOptions = {
@@ -53,6 +59,11 @@ export function get<T: any>(uri: string, options: any): Promise<T> {
                 'User-Agent': name,
             },
         };
+
+        if (opts.token) {
+            reqOptions.headers.Authorization = `token ${opts.token}`;
+        }
+
         const req = https.get(reqOptions, res => {
             let data = '';
             res.on('data', d => {
@@ -69,7 +80,7 @@ export function get<T: any>(uri: string, options: any): Promise<T> {
                         return;
                     }
                 } else {
-                    d = JSON.parse(data);
+                    d = data;
                 }
                 resolve(d);
             });
@@ -125,14 +136,11 @@ export const write = Promise.method((file: string, data: string, opts: any) => {
  */
 export function sync(repo: string, branch: string, file: string) {
     const uri = `https://raw.githubusercontent.com/${repo}/${branch}/${file}`;
-    https.get(uri, resp => {
-        if (resp.statusCode !== 200) {
+    get(uri)
+        .then(data => {
+            write(file, data);
+        })
+        .catch(err => {
             throw `Trouble while fetching ${repo}/${branch}/${file}.`;
-        }
-        let data = '';
-        resp.on('data', d => {
-            data += d;
         });
-        resp.on('end', () => write(file, data));
-    });
 }
