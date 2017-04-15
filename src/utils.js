@@ -40,7 +40,7 @@ function get<T: any>(uri: string, options: any): Promise<T> {
     const token = options && options.token;
     token && (headers.Authorization = `token ${token}`);
     const opts = Object.assign({ headers }, options);
-    return fetch(uri, opts).then(res => res.json());
+    return fetch(uri, opts);
 }
 
 /**
