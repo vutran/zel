@@ -10,7 +10,6 @@
     "node": ">= 7.4"
   },
   "scripts": {
-    "build": "babel src/ -d lib/",
     "flow": "flow",
     "flow-typed": "flow-typed install",
     "prepublish": "npm run build",
@@ -27,12 +26,10 @@
     "cache-conf": "^0.5.0",
     "caporal": "^0.5.0",
     "chalk": "^1.1.3",
-    "mkdirp": "^0.5.1"
+    "mkdirp": "^0.5.1",
+    "node-fetch": "^1.6.3"
   },
   "devDependencies": {
-    "babel-cli": "^6.24.1",
-    "babel-preset-es2015": "^6.24.1",
-    "babel-preset-flow": "^6.23.0",
     "flow-bin": "^0.43.1",
     "flow-typed": "^2.0.0",
     "husky": "^0.13.2",
