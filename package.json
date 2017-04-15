@@ -6,6 +6,9 @@
   "bin": {
     "zel": "./lib/index.js"
   },
+  "engines": {
+    "node": ">= 7.4"
+  },
   "scripts": {
     "build": "babel src/ -d lib/",
     "flow": "flow",
