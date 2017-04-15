@@ -65,10 +65,10 @@ async function getConfig(file: string): Promise<ZelConfig> {
 async function sync(repo: string, branch: string, file: string): Promise<T> {
     const info = `${repo}/${branch}/${file}`;
     const uri = `https://raw.githubusercontent.com/${info}`;
-    const data = await get(uri).catch(err => {
+    const res = await get(uri).catch(err => {
         throw `Trouble while fetching ${info}.`;
     });
-    return write(file, data);
+    return write(file, await res.text());
 }
 
 /**
