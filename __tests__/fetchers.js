@@ -1,6 +1,6 @@
-import BaseFetcher from '../lib/fetchers/base';
-import FileFetcher from '../lib/fetchers/file';
-import GitHubFetcher from '../lib/fetchers/github';
+import BaseFetcher from '../src/fetchers/base';
+import FileFetcher from '../src/fetchers/file';
+import GitHubFetcher from '../src/fetchers/github';
 
 describe('fetchers', () => {
     describe('BaseFetcher', () => {
