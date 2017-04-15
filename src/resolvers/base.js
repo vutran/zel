@@ -1,28 +1,18 @@
 // @flow
+import type { ZelConfig, ValidateOptions } from '../../types';
+const EventEmitter = require('events');
+const Promise = require('bluebird');
 
-import type { ZelConfig } from '../config';
-import EventEmitter from 'events';
-import Promise from 'bluebird';
-
-export interface ResolvedZelConfig {
-    repoName: string;
-    config?: ZelConfig;
-}
-
-interface ValidateOptions {
-    // add options here...
-}
-
-export default class BaseResolver extends EventEmitter {
+class BaseResolver extends EventEmitter {
     valid: Array<ResolvedZelConfig>;
     invalid: Array<ResolvedZelConfig>;
-    options: ValidateOptions;
+    opts: any;
 
     constructor(options: ValidateOptions) {
         super();
-        this.options = options || {};
         this.valid = [];
         this.invalid = [];
+        this.opts = options || {};
     }
 
     /**
@@ -38,3 +28,5 @@ export default class BaseResolver extends EventEmitter {
         return Promise.reject('Not yet implemented.');
     }
 }
+
+module.exports = BaseResolver;

@@ -1,8 +1,9 @@
 // @flow
+import type { ZelConfig } from '../../types';
+const BaseFetcher = require('./base');
 
-import type { ZelConfig } from '../config';
-import BaseFetcher from './base';
-
-export default class FileFetcher extends BaseFetcher {
+class FileFetcher extends BaseFetcher {
     // TODO
 }
+
+module.exports = FileFetcher;

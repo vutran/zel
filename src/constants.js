@@ -1,8 +1,7 @@
 // @flow
-
-import { homedir } from 'os';
-import { join } from 'path';
-import chalk from 'chalk';
+const { homedir } = require('os');
+const { join } = require('path');
+const chalk = require('chalk');
 
 const HOME = join(homedir(), '.zel');
 
@@ -26,4 +25,4 @@ const LOG = {
     INVALID: chalk.red('Invalid:'),
 };
 
-export { ZEL, LOG };
+module.exports = { ZEL, LOG };

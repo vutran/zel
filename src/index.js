@@ -1,21 +1,20 @@
 #!/usr/bin/env node
-
-import type { ZelConfig } from './config';
-import prog from 'caporal';
-import Promise from 'bluebird';
-import { version } from '../package';
-import { fetchFiles } from './repository';
-import { getLocalDependencies } from './local';
-import { LOG } from './constants';
-import GitHubResolver from './resolvers/github';
+// @flow
+import type { ZelConfig } from '../types';
+const prog = require('caporal');
+const Promise = require('bluebird');
+const { version } = require('../package');
+const { fetchFiles } = require('./repository');
+const { getLocalDependencies } = require('./local');
+const { LOG } = require('./constants');
+const GitHubResolver = require('./resolvers/github');
 
 function writeLog(entries, logger) {
     entries.forEach(entry => {
         if (entry.config.files) {
             const str = entry.config.files
                 .map(file => `${LOG.SPACER} - ${file}`)
-                .concat('')
-                .join('\n');
+                .join('');
 
             logger.info(LOG.DOWNLOADED, LOG.TITLE(entry.repoName));
             logger.info(str);
@@ -43,7 +42,7 @@ prog
     .action((args, options, logger) => {
         const resolver = new GitHubResolver({ token: options.token });
 
-        logger.info('\r'); // padding
+        logger.info(); // padding
 
         if (args.query) {
             return clone([args.query], logger, resolver);

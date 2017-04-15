@@ -1,16 +1,17 @@
 // @flow
-
-import type { ZelConfig } from './config';
-import fs from 'fs';
-import url from 'url';
-import path from 'path';
-import https from 'https';
-import mkdir from 'mkdirp';
-import Promise from 'bluebird';
-import { name } from '../package';
+import type { ZelConfig } from '../types';
+const { dirname, normalize } = require('path');
+const { readFile, writeFile } = require('fs');
+const Promise = require('bluebird');
+const fetch = require('node-fetch');
+const mkdir = require('mkdirp');
+const { name } = require('../package');
 
 const mkdirp = Promise.promisify(mkdir);
-const writeFile = Promise.promisify(fs.writeFile);
+const writer = Promise.promisify(writeFile);
+const reader = Promise.promisify(readFile);
+
+const headers = { 'User-Agent': name };
 
 /**
  * Parse a (`.zel`) file's base64 string as JSON.
@@ -20,7 +21,7 @@ const writeFile = Promise.promisify(fs.writeFile);
  * @param {string} filepath - The file's path
  * @return {Object}
  */
-export function bufferToJSON(content: Buffer, filepath: string): Object {
+function bufferToJSON(content: Buffer, filepath: string): Object {
     try {
         return JSON.parse(Buffer.from(content, 'base64').toString('utf8'));
     } catch (err) {
@@ -35,60 +36,11 @@ export function bufferToJSON(content: Buffer, filepath: string): Object {
  * @param {Object} options
  * @return {Promise<T>}
  */
-export function get<T: any>(uri: string, options: any): Promise<T> {
-    return new Promise((resolve, reject) => {
-        if (!uri) {
-            reject('Invalid URL.');
-            return;
-        }
-
-        const opts = Object.assign(
-            {
-                json: false,
-                token: null,
-            },
-            options
-        );
-
-        const u = url.parse(uri);
-        const reqOptions = {
-            protocol: u.protocol,
-            hostname: u.hostname,
-            path: u.path,
-            headers: {
-                'User-Agent': name,
-            },
-        };
-
-        if (opts.token) {
-            reqOptions.headers.Authorization = `token ${opts.token}`;
-        }
-
-        const req = https.get(reqOptions, res => {
-            let data = '';
-            res.on('data', d => {
-                data += d;
-            });
-            res.on('end', () => {
-                let d = '';
-                // attempts to parse json data if necessary
-                if (opts.json) {
-                    try {
-                        d = JSON.parse(data);
-                    } catch (err) {
-                        reject(err);
-                        return;
-                    }
-                } else {
-                    d = data;
-                }
-                resolve(d);
-            });
-        });
-        req.on('error', e => {
-            reject(e);
-        });
-    });
+function get<T: any>(uri: string, options: any): Promise<T> {
+    const token = options && options.token;
+    token && (headers.Authorization = `token ${token}`);
+    const opts = Object.assign({ headers }, options);
+    return fetch(uri, opts);
 }
 
 /**
@@ -97,20 +49,26 @@ export function get<T: any>(uri: string, options: any): Promise<T> {
  * @param {string} file - The path to the file
  * @return {Promise<ZelConfig>} - The file contents as JSON Object
  */
-export function getConfig(file: string): Promise<ZelConfig> {
-    return new Promise((resolve, reject) => {
-        fs.readFile(file, (err, buf) => {
-            if (err && err.code === 'ENOENT') {
-                return reject(`File does not exist: ${file}`);
-            }
-            try {
-                const data = (bufferToJSON(buf, file): ZelConfig);
-                resolve(data);
-            } catch (msg) {
-                reject(msg);
-            }
-        });
+async function getConfig(file: string): Promise<ZelConfig> {
+    const buf = await reader(file); // err && (err.code === 'ENOENT') && reject(`File does not exist: ${file}`);
+    return (bufferToJSON(buf, file): ZelConfig); // reject(msg);
+}
+
+/**
+ * Downloads the contents from the given repo file path components.
+ *
+ * @param {string} repo
+ * @param {string} branch
+ * @param {string} file
+ * @return {Promise<T>}
+ */
+async function sync(repo: string, branch: string, file: string): Promise<T> {
+    const info = `${repo}/${branch}/${file}`;
+    const uri = `https://raw.githubusercontent.com/${info}`;
+    const res = await get(uri).catch(err => {
+        throw `Trouble while fetching ${info}.`;
     });
+    return write(file, await res.text());
 }
 
 /**
@@ -120,27 +78,12 @@ export function getConfig(file: string): Promise<ZelConfig> {
  * @param {string} file - The full file"s path.
  * @param {string} data - The data to write.
  * @param {Object} opts - See `fs.writeFile`.
+ * @return {Promise<T>}
  */
-export const write = Promise.method((file: string, data: string, opts: any) => {
-    file = path.normalize(file);
-    const dirs = path.dirname(file);
-    return mkdirp(dirs).then(() => writeFile(file, data, opts));
-});
-
-/**
- * Downloads the contents from the given repo file path components.
- *
- * @param {string} repo
- * @param {string} branch
- * @param {string} file
- */
-export function sync(repo: string, branch: string, file: string) {
-    const uri = `https://raw.githubusercontent.com/${repo}/${branch}/${file}`;
-    get(uri)
-        .then(data => {
-            write(file, data);
-        })
-        .catch(err => {
-            throw `Trouble while fetching ${repo}/${branch}/${file}.`;
-        });
+async function write(file: string, data: string, opts: any): Promise<T> {
+    file = normalize(file);
+    await mkdirp(dirname(file));
+    return writer(file, data, opts);
 }
+
+module.exports = { bufferToJSON, get, getConfig, sync, write };

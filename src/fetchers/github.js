@@ -1,19 +1,13 @@
 // @flow
+import type { ZelConfig, FetchOptions } from '../../types';
+const path = require('path');
+const Promise = require('bluebird');
+const CacheConf = require('cache-conf');
+const { ZEL } = require('../constants');
+const { bufferToJSON, get } = require('../utils');
+const BaseFetcher = require('./base');
 
-import type { ZelConfig } from '../config';
-import path from 'path';
-import Promise from 'bluebird';
-import CacheConf from 'cache-conf';
-import { ZEL } from '../constants';
-import { bufferToJSON, get } from '../utils';
-import BaseFetcher from './base';
-
-export interface FetchOptions {
-    // optional GitHub token
-    token?: string;
-}
-
-export default class GitHubFetcher extends BaseFetcher {
+class GitHubFetcher extends BaseFetcher {
     constructor(options: FetchOptions) {
         super(options);
     }
@@ -42,13 +36,9 @@ export default class GitHubFetcher extends BaseFetcher {
      * @return {Promise<ZelConfig>} - The configuration object
      */
     fetchFromRemote(repoName: string): Promise<ZelConfig> {
-        const opts = { json: true };
-
-        if (this.options.token) {
-            opts.token = this.options.token;
-        }
-
-        return get(`https://api.github.com/repos/${repoName}/contents/${ZEL.FILE}`, opts)
+        const token = this.options.token;
+        return get(`https://api.github.com/repos/${repoName}/contents/${ZEL.FILE}`, { token })
+            .then(resp => resp.json())
             .then(resp => {
                 if (resp.message === 'Not Found') {
                     return Promise.reject(`${repoName} not found.`);
@@ -84,3 +74,5 @@ export default class GitHubFetcher extends BaseFetcher {
             .catch(err => Promise.reject(err));
     }
 }
+
+module.exports = GitHubFetcher;

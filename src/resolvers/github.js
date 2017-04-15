@@ -1,25 +1,15 @@
 // @flow
+import type { ZelConfig, ResolvedZelConfig, ValidateOptions } from '../../types';
+const Promise = require('bluebird');
+const BaseResolver = require('./base');
+const GitHubFetcher = require('../fetchers/github');
 
-import type { ZelConfig } from '../config';
-import type { ResolvedZelConfig } from './base';
-import Promise from 'bluebird';
-import BaseResolver from './base';
-import GitHubFetcher from '../fetchers/github';
-
-interface ValidateOptions {
-    // optional GitHub token
-    token?: string;
-}
-
-export default class GithubResolver extends BaseResolver {
+class GithubResolver extends BaseResolver {
     constructor(options: ValidateOptions) {
         super(options);
 
-        const fetcherOptions = {
-            token: (options && options.token) || null,
-        };
-
-        this.fetcher = new GitHubFetcher(fetcherOptions);
+        const token = options.token;
+        this.fetcher = new GitHubFetcher({ token });
     }
 
     /**
@@ -77,3 +67,5 @@ export default class GithubResolver extends BaseResolver {
         return [config];
     }
 }
+
+module.exports = GithubResolver;
