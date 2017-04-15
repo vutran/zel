@@ -12,7 +12,7 @@
     "flow-typed": "flow-typed install",
     "prepublish": "npm run build",
     "precommit": "npm run lint",
-    "preinstall": "npm run flow-typed",
+    "postinstall": "npm run flow-typed",
     "lint": "prettier --parser=flow --single-quote --trailing-comma=es5 --print-width=90 --tab-width=4 --write 'src/*.js' 'index.js'",
     "test": "npm run lint"
   },
