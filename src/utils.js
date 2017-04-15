@@ -5,13 +5,11 @@ const { readFile, writeFile } = require('fs');
 const Promise = require('bluebird');
 const fetch = require('node-fetch');
 const mkdir = require('mkdirp');
-const { name } = require('../package');
+const pkg = require('../package');
 
 const mkdirp = Promise.promisify(mkdir);
 const writer = Promise.promisify(writeFile);
 const reader = Promise.promisify(readFile);
-
-const headers = { 'User-Agent': name };
 
 /**
  * Converts a Buffer (base64 string) to a JSON object.
@@ -35,10 +33,11 @@ function bufferToJSON(content: Buffer): Object {
  * @return {Promise<T>}
  */
 function get<T: any>(uri: string, options: any): Promise<T> {
-    const token = options && options.token;
-    token && (headers.Authorization = `token ${token}`);
-    const opts = Object.assign({ headers }, options);
-    return fetch(uri, opts);
+    const headers = { 'User-Agent': pkg.name };
+    if (options && options.token) {
+        headers.Authorization = `token ${options.token}`;
+    }
+    return fetch(uri, { headers });
 }
 
 /**
