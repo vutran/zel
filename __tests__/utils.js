@@ -1,4 +1,4 @@
-import { bufferToJSON } from '../src/utils';
+import { bufferToJSON } from '../lib/utils';
 
 describe('utils', () => {
     describe('bufferToJSON', () => {
