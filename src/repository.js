@@ -1,5 +1,5 @@
 // @flow
-import type { ZelConfig, ResolvedZelConfig } from './types';
+import type { ZelConfig, ResolvedZelConfig } from '../types';
 const { sync } = require('./utils');
 
 /**

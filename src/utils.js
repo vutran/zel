@@ -1,5 +1,5 @@
 // @flow
-import type { ZelConfig } from './types';
+import type { ZelConfig } from '../types';
 const { dirname, normalize } = require('path');
 const { readFile, writeFile } = require('fs');
 const Promise = require('bluebird');

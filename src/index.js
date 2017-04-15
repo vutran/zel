@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 // @flow
-import type { ZelConfig } from './config';
+import type { ZelConfig } from '../types';
 const prog = require('caporal');
 const Promise = require('bluebird');
 const { version } = require('../package');
