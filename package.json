@@ -2,10 +2,13 @@
   "name": "zel",
   "version": "0.1.0",
   "description": "zel is small, and simple command-line tool that helps kickstart new projects.",
-  "main": "./lib/index.js",
+  "main": "lib/index.js",
   "bin": {
-    "zel": "./lib/index.js"
+    "zel": "lib/index.js"
   },
+  "files": [
+    "lib"
+  ],
   "engines": {
     "node": ">= 7.4"
   },
