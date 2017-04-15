@@ -4,9 +4,11 @@ const EventEmitter = require('events');
 const Promise = require('bluebird');
 
 class BaseFetcher extends EventEmitter {
+    options: ValidateOptions;
+
     constructor(options: FetchOptions) {
         super();
-        this.options = options;
+        this.options = options || {};
     }
 
     /**

@@ -6,13 +6,13 @@ const Promise = require('bluebird');
 class BaseResolver extends EventEmitter {
     valid: Array<ResolvedZelConfig>;
     invalid: Array<ResolvedZelConfig>;
-    opts: any;
+    options: ValidateOptions;
 
     constructor(options: ValidateOptions) {
         super();
         this.valid = [];
         this.invalid = [];
-        this.opts = options || {};
+        this.options = options || {};
     }
 
     /**
