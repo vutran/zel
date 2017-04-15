@@ -48,6 +48,17 @@ describe('utils', () => {
             expect(results)
                 .toBe('{"foofoo":"barbar"}');
         });
+
+        it('should handle rejections', async () => {
+            fetch.__setShouldReject(true);
+            fetch.__setResponse('THIS IS A REJECTION');
+
+            try {
+                const results = await get('https://rejected.com');
+            } catch (err) {
+                expect(err).toBe('THIS IS A REJECTION');
+            }
+        });
     });
 
     describe('getConfig', () => {
