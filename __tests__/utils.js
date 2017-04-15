@@ -13,5 +13,21 @@ describe('utils', () => {
             const a = () => bufferToJSON(buff);
             expect(a).toThrow();
         });
+
+        it('should fetch data from a remote server', () => {
+            // TODO
+        });
+
+        it('should get a config file from the filesystem', () => {
+            // TODO
+        });
+
+        it('should sync/download the specified file', () => {
+            // TODO
+        });
+
+        it('should write content to a file', () => {
+            // TODO
+        });
     });
 });
