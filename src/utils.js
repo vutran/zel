@@ -14,18 +14,16 @@ const reader = Promise.promisify(readFile);
 const headers = { 'User-Agent': name };
 
 /**
- * Parse a (`.zel`) file's base64 string as JSON.
- * Customizes handler for `Unexpected Token` error
+ * Converts a Buffer (base64 string) to a JSON object.
  *
- * @param Buffer} content - The file's contents
- * @param {string} filepath - The file's path
+ * @param {Buffer} content - The Buffer to convert
  * @return {Object}
  */
-function bufferToJSON(content: Buffer, filepath: string): Object {
+function bufferToJSON(content: Buffer): Object {
     try {
         return JSON.parse(Buffer.from(content, 'base64').toString('utf8'));
     } catch (err) {
-        throw `Unexpected token in ${filepath}`;
+        throw err;
     }
 }
 
