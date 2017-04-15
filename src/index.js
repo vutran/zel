@@ -25,10 +25,10 @@ function writeLog(entries, logger) {
     });
 }
 
-function clone(deps: Array<string>, logger) {
+function clone(deps: Array<string>, logger, token: string) {
     resolver
         .on('invalid', (config: ZelConfig) => logger.error(LOG.INVALID, config.repoName))
-        .validate(deps)
+        .validate(deps, { token })
         .then(valid => valid.map(v => fetchFiles(v.repoName, v.config)))
         .then(entry => writeLog(entry, logger))
         .catch(err => logger.error(LOG.ERROR, err));
@@ -37,25 +37,36 @@ function clone(deps: Array<string>, logger) {
 prog
     .version(version)
     .argument('[query]', 'Specify the repository to fetch.')
+    .option(
+        '--token <token>',
+        'Specify a GitHub token for fetch private repository.',
+        prog.STRING
+    )
     .action((args, options, logger) => {
         logger.info('\r'); // padding
 
         if (args.query) {
-            return clone([args.query], logger);
+            return clone([args.query], logger, options.token);
         }
 
         return getLocalDependencies()
-            .then(deps => clone(deps, logger))
+            .then(deps => clone(deps, logger, options.token))
             .catch(err => logger.error(LOG.ERROR, err));
     })
     .command('validate', 'Validates local .zel file.')
+    .option(
+        '--token <token>',
+        'Specify a GitHub token for fetch private repository.',
+        prog.STRING
+    )
     .action((args, options, logger) => {
+        const token = options.token;
         getLocalDependencies()
             .then(deps => {
                 resolver
                     .on('valid', repo => logger.info(LOG.VALID, repo.repoName))
                     .on('invalid', repo => logger.error(LOG.INVALID, repo.repoName))
-                    .validate(deps)
+                    .validate(deps, { token })
                     .catch(err => logger.error(LOG.ERROR, err));
             })
             .catch(err => logger.error(LOG.ERROR, err));

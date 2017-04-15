@@ -9,6 +9,11 @@ export interface ResolvedZelConfig {
     config?: ZelConfig;
 }
 
+export interface ValidateOptions {
+    // optional GitHub token
+    token?: string;
+}
+
 export default class BaseResolver extends EventEmitter {
     valid: Array<ResolvedZelConfig>;
     invalid: Array<ResolvedZelConfig>;
@@ -28,9 +33,10 @@ export default class BaseResolver extends EventEmitter {
      * of the list of invalid item.
      *
      * @param {Array<string>} - List of inputs
+     * @param {ValidateOptions} - Dictionary of validation options
      * @return {Promise<Array<ResolvedZelConfig>>} - Resolves a list of resolved valid/invalid config objects
      */
-    validate(list: Array<string>): Promise<Array<ResolvedZelConfig>> {
+    validate(list: Array<string>, options: ValidateOptions): Promise<Array<ResolvedZelConfig>> {
         return Promise.reject('Not yet implemented.');
     }
 }
