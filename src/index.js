@@ -1,12 +1,13 @@
 #!/usr/bin/env node
+// @flow
 import type { ZelConfig } from './config';
-import prog from 'caporal';
-import Promise from 'bluebird';
-import { version } from '../package';
-import { fetchFiles } from './repository';
-import { getLocalDependencies } from './local';
-import { LOG } from './constants';
-import GitHubResolver from './resolvers/github';
+const prog = require('caporal');
+const Promise = require('bluebird');
+const { version } = require('../package');
+const { fetchFiles } = require('./repository');
+const { getLocalDependencies } = require('./local');
+const { LOG } = require('./constants');
+const GitHubResolver = require('./resolvers/github');
 
 function writeLog(entries, logger) {
     entries.forEach(entry => {

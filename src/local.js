@@ -1,15 +1,15 @@
 // @flow
-import path from 'path';
-import Promise from 'bluebird';
-import { ZEL } from './constants';
-import { getConfig } from './utils';
+const path = require('path');
+const Promise = require('bluebird');
+const { ZEL } = require('./constants');
+const { getConfig } = require('./utils');
 
 /**
  * Gets `dependencies` from a local `.zel`, if any
  *
  * @return {Promise<Array<string>>} - The list of local dependencies
  */
-export function getLocalDependencies() {
+function getLocalDependencies() {
     return new Promise((resolve, reject) => {
         const dotfile = path.resolve(ZEL.FILE);
         getConfig(dotfile)
@@ -17,3 +17,5 @@ export function getLocalDependencies() {
             .catch(err => reject(err));
     });
 }
+
+module.exports = { getLocalDependencies };

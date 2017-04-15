@@ -1,6 +1,6 @@
 // @flow
 import type { ZelConfig, ResolvedZelConfig } from './types';
-import { sync } from './utils';
+const { sync } = require('./utils');
 
 /**
  * Fetch the list of files in the given repository,
@@ -10,10 +10,12 @@ import { sync } from './utils';
  * @param {ZelConfig} - The zel config object
  * @return {ZelConfig} - An object with the repository name and config
  */
-export function fetchFiles(repoName: string, config: ZelConfig): ResolvedZelConfig {
+function fetchFiles(repoName: string, config: ZelConfig): ResolvedZelConfig {
     if (config.files && config.files.length) {
         config.files.forEach(file => sync(repoName, 'master', file));
     }
 
     return ({ repoName, config }: ResolvedZelConfig);
 }
+
+module.exports = { fetchFiles };

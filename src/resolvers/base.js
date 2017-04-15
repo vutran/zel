@@ -1,9 +1,9 @@
 // @flow
 import type { ZelConfig } from '../types';
-import EventEmitter from 'events';
-import Promise from 'bluebird';
+const EventEmitter = require('events');
+const Promise = require('bluebird');
 
-export default class BaseResolver extends EventEmitter {
+class BaseResolver extends EventEmitter {
     valid: Array<ResolvedZelConfig>;
     invalid: Array<ResolvedZelConfig>;
     opts: any;
@@ -28,3 +28,5 @@ export default class BaseResolver extends EventEmitter {
         return Promise.reject('Not yet implemented.');
     }
 }
+
+module.exports = BaseResolver;

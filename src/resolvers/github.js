@@ -1,25 +1,12 @@
 // @flow
 import type { ZelConfig, ResolvedZelConfig } from '../types';
-import Promise from 'bluebird';
-import BaseResolver from './base';
-import GitHubFetcher from '../fetchers/github';
+const Promise = require('bluebird');
+const BaseResolver = require('./base');
+const GitHubFetcher = require('../fetchers/github');
 
-interface ValidateOptions {
-    // optional GitHub token
-    token?: string;
-}
+const fetcher = new GitHubFetcher();
 
-export default class GithubResolver extends BaseResolver {
-    constructor(options: ValidateOptions) {
-        super(options);
-
-        const fetcherOptions = {
-            token: (options && options.token) || null,
-        };
-
-        this.fetcher = new GitHubFetcher(fetcherOptions);
-    }
-
+class GithubResolver extends BaseResolver {
     /**
      * Validates the given list of repositories.
      *
@@ -53,7 +40,7 @@ export default class GithubResolver extends BaseResolver {
      * @return {Promise<ZelConfig>} - Resolves the zel config object
      */
     fetch(repoName: string): Promise<Array<ZelConfig>> {
-        return this.fetcher.fetchConfig(repoName)
+        return fetcher.fetchConfig(repoName)
             .then(config => this.valid.push({ repoName, config }) && config)
             .then(config => this.fetchDependencies(config))
             .catch(err => {
@@ -75,3 +62,5 @@ export default class GithubResolver extends BaseResolver {
         return [config];
     }
 }
+
+module.exports = GithubResolver;
