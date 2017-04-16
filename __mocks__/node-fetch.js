@@ -10,6 +10,11 @@ const fetch = jest.fn(
 );
 
 // setters
+fetch.__reset = () => {
+    __response = null;
+    __shouldReject = false;
+};
+
 fetch.__setResponse = (response: any) => {
     __response = response;
 };

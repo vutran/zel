@@ -12,6 +12,11 @@ const mkdirp = jest.fn(
 );
 
 // setters
+mkdirp.__reset = () => {
+    __dirList = [];
+    __error = null;
+};
+
 mkdirp.__setError = (error: Error) => {
     _error = error;
 };

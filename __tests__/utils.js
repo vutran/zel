@@ -1,4 +1,4 @@
-import { bufferToJSON, get, getConfig, write } from '../src/utils';
+import { bufferToJSON, get, getConfig, sync, write } from '../src/utils';
 
 jest.mock('fs');
 
@@ -19,6 +19,11 @@ describe('utils', () => {
 
     describe('get', () => {
         const fetch = require('node-fetch');
+
+        beforeEach(() => {
+            jest.clearAllMocks();
+            fetch.__reset();
+        });
 
         it('should fetch data from a remote server', async () => {
             fetch.__setResponse('{"foo":"bar"}');
@@ -65,12 +70,15 @@ describe('utils', () => {
 
     describe('getConfig', () => {
         const fs = require('fs');
+        beforeEach(() => {
+            jest.clearAllMocks();
+            fs.__reset();
+        });
 
         it('should get a config file from the filesystem', async () => {
             const fooData = Buffer.from('{"foo":"FOO"}');
             const barData = Buffer.from('{"bar":"BAR"}');
 
-            fs.__reset();
             fs.__setFileData('foo.txt', fooData);
             fs.__setFileData('bar.txt', barData);
 
@@ -86,7 +94,6 @@ describe('utils', () => {
         });
 
         it('should throw an error if file does not exist', async () => {
-            fs.__reset();
             fs.__setError(new Error('Invalid file'));
 
             try {
@@ -98,8 +105,43 @@ describe('utils', () => {
     });
 
     describe('sync', () => {
-        it('should sync/download the specified file', () => {
-            // TODO
+        const fs = require('fs');
+        const fetch = require('node-fetch');
+        const mkdirp = require('mkdirp');
+
+        beforeEach(() => {
+            jest.clearAllMocks();
+            fs.__reset();
+            fetch.__reset();
+            mkdirp.__reset();
+        });
+
+        it('should sync/download the specified file', async () => {
+            fetch.__setResponse({ ok: true, text: () => 'FOO RESPONSE' });
+
+            await sync('vutran/test', 'master', 'foo.txt');
+
+            expect(fs.writeFile)
+                .toBeCalled();
+            expect(fs.__getFiles())
+                .toEqual({ 'foo.txt': 'FOO RESPONSE' });
+            expect(mkdirp)
+                .toBeCalled();
+        });
+
+        it('should throw when trying to sync an invalid file', async () => {
+            fetch.__setResponse({ ok: false });
+
+            try {
+                await sync('vutran/test', 'master', 'invalid.txt');
+            } catch (err) {
+                expect(err).toEqual(new Error('Trouble while fetching vutran/test/master/invalid.txt.'));
+            }
+
+            expect(fs.writeFile)
+                .not.toBeCalled();
+            expect(mkdirp)
+                .not.toBeCalled();
         });
     });
 
@@ -108,9 +150,13 @@ describe('utils', () => {
         const fs = require('fs');
         const mkdirp = require('mkdirp');
 
-        it('should write content to a file', async () => {
+        beforeEach(() => {
+            jest.clearAllMocks();
             fs.__reset();
+            mkdirp.__reset();
+        });
 
+        it('should write content to a file', async () => {
             await write('test/foo.txt', 'FOO');
 
             expect(mkdirp)
