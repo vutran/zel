@@ -4,3 +4,4 @@ flow-typed
 *.log
 lib
 coverage
+.vscode
