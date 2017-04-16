@@ -5,27 +5,23 @@ const { readFile, writeFile } = require('fs');
 const Promise = require('bluebird');
 const fetch = require('node-fetch');
 const mkdir = require('mkdirp');
-const { name } = require('../package');
+const pkg = require('../package');
 
 const mkdirp = Promise.promisify(mkdir);
 const writer = Promise.promisify(writeFile);
 const reader = Promise.promisify(readFile);
 
-const headers = { 'User-Agent': name };
-
 /**
- * Parse a (`.zel`) file's base64 string as JSON.
- * Customizes handler for `Unexpected Token` error
+ * Converts a Buffer (base64 string) to a JSON object.
  *
- * @param Buffer} content - The file's contents
- * @param {string} filepath - The file's path
+ * @param {Buffer} content - The Buffer to convert
  * @return {Object}
  */
-function bufferToJSON(content: Buffer, filepath: string): Object {
+function bufferToJSON(content: Buffer): Object {
     try {
         return JSON.parse(Buffer.from(content, 'base64').toString('utf8'));
     } catch (err) {
-        throw `Unexpected token in ${filepath}`;
+        throw err;
     }
 }
 
@@ -37,10 +33,11 @@ function bufferToJSON(content: Buffer, filepath: string): Object {
  * @return {Promise<T>}
  */
 function get<T: any>(uri: string, options: any): Promise<T> {
-    const token = options && options.token;
-    token && (headers.Authorization = `token ${token}`);
-    const opts = Object.assign({ headers }, options);
-    return fetch(uri, opts);
+    const headers = { 'User-Agent': pkg.name };
+    if (options && options.token) {
+        headers.Authorization = `token ${options.token}`;
+    }
+    return fetch(uri, { headers });
 }
 
 /**
@@ -65,17 +62,18 @@ async function getConfig(file: string): Promise<ZelConfig> {
 async function sync(repo: string, branch: string, file: string): Promise<T> {
     const info = `${repo}/${branch}/${file}`;
     const uri = `https://raw.githubusercontent.com/${info}`;
-    const res = await get(uri).catch(err => {
-        throw `Trouble while fetching ${info}.`;
-    });
-    return write(file, await res.text());
+    const res = await get(uri);
+    if (!res.ok) {
+        throw new Error(`Trouble while fetching ${info}.`);
+    }
+    return write(file, res.text());
 }
 
 /**
  * Write to a file with given data.
  * Creates ancestor directories if needed.
  *
- * @param {string} file - The full file"s path.
+ * @param {string} file - The full file's path.
  * @param {string} data - The data to write.
  * @param {Object} opts - See `fs.writeFile`.
  * @return {Promise<T>}

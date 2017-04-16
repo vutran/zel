@@ -3,3 +3,4 @@ node_modules
 flow-typed
 *.log
 lib
+coverage
