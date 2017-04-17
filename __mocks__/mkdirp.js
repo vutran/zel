@@ -1,9 +1,9 @@
 // mocks
-let __dirList: Array<string> = [];
-let __error: Error = null;
+let __dirList = [];
+let __error = null;
 
 const mkdirp = jest.fn(
-    (directory: string, callback: Function) => {
+    (directory, callback) => {
         __dirList.push(directory);
         if (typeof callback === 'function') {
             callback.call(null, __error);
@@ -17,7 +17,7 @@ mkdirp.__reset = () => {
     __error = null;
 };
 
-mkdirp.__setError = (error: Error) => {
+mkdirp.__setError = (error) => {
     _error = error;
 };
 

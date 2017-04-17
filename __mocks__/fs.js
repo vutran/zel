@@ -1,11 +1,11 @@
 const fs = jest.genMockFromModule('fs');
 
 // mocks
-let __fileMap: { [file: string]: any } = {};
-let __error: Error = null;
+let __fileMap = {};
+let __error = null;
 
 fs.readFile = jest.fn(
-    (file: string, callback: Function) => {
+    (file, callback) => {
         if (typeof callback === 'function') {
             const error = file in __fileMap ? null : __error;
             callback.call(null, error, __fileMap[file]);
@@ -14,7 +14,7 @@ fs.readFile = jest.fn(
 )
 
 fs.writeFile = jest.fn(
-    (file: string, data: any, options: Object, callback: Function) => {
+    (file, data, options, callback) => {
         fs.__setFileData(file, data); // writes to the file map
         if (typeof callback === 'function') {
             callback.call(null, __error);
@@ -28,11 +28,11 @@ fs.__reset = () => {
     __error = null;
 };
 
-fs.__setFileData = (file: string, data: any) => {
+fs.__setFileData = (file, data) => {
     __fileMap[file] = data;
 };
 
-fs.__setError = (error: Error) => {
+fs.__setError = (error) => {
     __error = error;
 };
 
