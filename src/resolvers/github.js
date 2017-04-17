@@ -34,7 +34,7 @@ class GithubResolver extends BaseResolver {
             .then(() => this.valid.forEach(config => this.emit('valid', config)))
             .then(() => this.invalid.forEach(config => this.emit('invalid', config)))
             .then(() => repos.length <= this.valid.length)
-            .then(isValid => isValid ? this.valid : Promise.reject(this.invalid))
+            .then(isValid => (isValid ? this.valid : Promise.reject(this.invalid)))
             .catch(err => Promise.reject(err));
     }
 
@@ -45,7 +45,8 @@ class GithubResolver extends BaseResolver {
      * @return {Promise<ZelConfig>} - Resolves the zel config object
      */
     fetch(repoName: string): Promise<Array<ZelConfig>> {
-        return this.fetcher.fetchConfig(repoName)
+        return this.fetcher
+            .fetchConfig(repoName)
             .then(config => this.valid.push({ repoName, config }) && config)
             .then(config => this.fetchDependencies(config))
             .catch(err => {

@@ -16,7 +16,7 @@
     "build": "fly clean build",
     "flow": "flow",
     "flow-typed": "flow-typed install",
-    "lint": "prettier --parser=flow --single-quote --trailing-comma=es5 --print-width=90 --tab-width=4 --write 'src/*.js' 'index.js'",
+    "lint": "fly lint",
     "postinstall": "npm run flow-typed",
     "precommit": "npm run lint",
     "prepublish": "npm run build",
