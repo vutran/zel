@@ -39,6 +39,10 @@
     "flow-bin": "^0.43.1",
     "flow-remove-types": "^1.2.0",
     "flow-typed": "^2.0.0",
+    "fly": "^2.0.5",
+    "fly-clear": "^1.0.1",
+    "fly-esnext": "^2.0.1",
+    "fly-watch": "^1.1.1",
     "husky": "^0.13.2",
     "jest": "^19.0.2",
     "prettier": "^0.22.0"
