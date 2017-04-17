@@ -13,7 +13,7 @@
     "node": ">= 7.4"
   },
   "scripts": {
-    "build": "flow-remove-types --pretty src/ --out-dir lib/",
+    "build": "fly clean build",
     "flow": "flow",
     "flow-typed": "flow-typed install",
     "lint": "prettier --parser=flow --single-quote --trailing-comma=es5 --print-width=90 --tab-width=4 --write 'src/*.js' 'index.js'",
