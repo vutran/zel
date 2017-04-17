@@ -41,10 +41,10 @@
     "fly": "^2.0.5",
     "fly-clear": "^1.0.1",
     "fly-esnext": "^2.0.1",
+    "fly-prettier": "^1.0.0",
     "fly-unflow": "^1.0.0",
     "fly-watch": "^1.1.1",
     "husky": "^0.13.2",
-    "jest": "^19.0.2",
-    "prettier": "^0.22.0"
+    "jest": "^19.0.2"
   }
 }
