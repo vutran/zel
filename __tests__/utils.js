@@ -1,4 +1,4 @@
-import { bufferToJSON, get, getConfig, sync, write } from '../src/utils';
+const { bufferToJSON, get, getConfig, sync, write } = require('../lib/utils');
 
 jest.mock('fs');
 
