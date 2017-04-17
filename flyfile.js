@@ -8,8 +8,8 @@ export async function clean(fly) {
     await fly.clear(dist);
 }
 
-export async function build(fly) {
-    await fly.source(src).unflow().target(dist);
+export async function build(fly, opts) {
+    await fly.source(opts.src || src).unflow().target(dist);
 }
 
 export async function lint(fly) {
@@ -25,11 +25,11 @@ export async function lint(fly) {
 export async function test(fly) {
     const rootDir = fly.root;
     const config = { collectCoverage:true, rootDir };
-    await fly.source('__tests__/*.js').run({every: false}, function * (file) {
-        runCLI({ config }, rootDir, result => {
-            if (result.numFailedTests || result.numFailedTestSuites) {
-                console.log('Tests Failed!');
-            }
-        })
+    await fly.source('__tests__/*.js').run({every: false}, function * () {
+        runCLI({ config }, rootDir);
     });
+}
+
+export async function watch(fly) {
+    await fly.watch(src, ['build', 'test']);
 }

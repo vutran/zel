@@ -14,6 +14,7 @@
   },
   "scripts": {
     "build": "fly clean build",
+    "dev": "fly watch",
     "flow": "flow",
     "flow-typed": "flow-typed install",
     "lint": "fly lint",
