@@ -20,8 +20,7 @@
     "postinstall": "npm run flow-typed",
     "precommit": "npm run lint",
     "prepublish": "npm run build",
-    "jest": "jest --coverage",
-    "test": "npm run lint && npm run jest"
+    "test": "fly build test"
   },
   "keywords": [],
   "author": "Vu Tran <vu@vu-tran.com>",
@@ -45,6 +44,6 @@
     "fly-unflow": "^1.0.0",
     "fly-watch": "^1.1.1",
     "husky": "^0.13.2",
-    "jest": "^19.0.2"
+    "jest-cli": "^19.0.2"
   }
 }
