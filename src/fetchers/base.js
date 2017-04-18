@@ -1,5 +1,5 @@
 // @flow
-import type { ZelConfig, FetchOptions } from '../../types';
+import type { ZelConfig, FetchOptions } from '../types';
 const EventEmitter = require('events');
 const Promise = require('bluebird');
 
