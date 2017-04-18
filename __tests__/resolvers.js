@@ -1,5 +1,5 @@
-import BaseResolver from '../src/resolvers/base';
-import GitHubResolver from '../src/resolvers/github';
+const BaseResolver = require('../lib/resolvers/base');
+const GitHubResolver = require('../lib/resolvers/github');
 
 describe('resolvers', () => {
     describe('BaseResolver', () => {

@@ -13,15 +13,13 @@
     "node": ">= 7.4"
   },
   "scripts": {
-    "build": "flow-remove-types --pretty src/ --out-dir lib/",
+    "build": "fly clean build",
+    "dev": "fly watch",
     "flow": "flow",
-    "flow-typed": "flow-typed install",
-    "lint": "prettier --parser=flow --single-quote --trailing-comma=es5 --print-width=90 --tab-width=4 --write 'src/*.js' 'index.js'",
-    "postinstall": "npm run flow-typed",
-    "precommit": "npm run lint",
+    "postinstall": "flow-typed install",
+    "precommit": "fly lint",
     "prepublish": "npm run build",
-    "jest": "jest --coverage",
-    "test": "npm run lint && npm run jest"
+    "test": "fly build test"
   },
   "keywords": [],
   "author": "Vu Tran <vu@vu-tran.com>",
@@ -35,16 +33,16 @@
     "node-fetch": "^1.6.3"
   },
   "devDependencies": {
-    "babel-cli": "^6.24.1",
-    "babel-jest": "^19.0.0",
-    "babel-preset-es2015": "^6.24.1",
-    "babel-preset-flow": "^6.23.0",
     "coveralls": "^2.13.0",
     "flow-bin": "^0.43.1",
-    "flow-remove-types": "^1.2.0",
     "flow-typed": "^2.0.0",
+    "fly": "^2.0.5",
+    "fly-clear": "^1.0.1",
+    "fly-esnext": "^2.0.1",
+    "fly-prettier": "^1.0.0",
+    "fly-unflow": "^1.0.0",
+    "fly-watch": "^1.1.1",
     "husky": "^0.13.2",
-    "jest": "^19.0.2",
-    "prettier": "^0.22.0"
+    "jest-cli": "^19.0.2"
   }
 }
