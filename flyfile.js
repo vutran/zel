@@ -1,4 +1,5 @@
 const tests = '__tests__/*.js';
+const types = 'src/types/**';
 const src = 'src/**/*.js';
 const dist = 'lib';
 
@@ -7,7 +8,7 @@ export async function clean(fly) {
 }
 
 export async function build(fly, opts) {
-    await fly.source(opts.src || src).unflow().target(dist);
+    await fly.source(opts.src || src, { ignore:types }).unflow().target(dist);
 }
 
 export async function lint(fly) {
