@@ -1,6 +1,5 @@
-const { format } = require('path');
-const { runCLI } = require('jest-cli');
-
+const tests = '__tests__/*.js';
+const mocks = '__mocks__/*.js';
 const src = 'src/**/*.js';
 const dist = 'lib';
 
@@ -23,9 +22,10 @@ export async function lint(fly) {
 }
 
 export async function test(fly) {
-    await fly.source('__tests__/*.js').jest({ collectCoverage:true });
+    await fly.source(tests).jest({ collectCoverage:true });
 }
 
 export async function watch(fly) {
     await fly.watch(src, ['build', 'test']);
+    await fly.watch([tests, mocks], 'test');
 }
