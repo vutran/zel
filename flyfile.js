@@ -1,5 +1,4 @@
 const tests = '__tests__/*.js';
-const mocks = '__mocks__/*.js';
 const src = 'src/**/*.js';
 const dist = 'lib';
 
@@ -26,6 +25,6 @@ export async function test(fly) {
 }
 
 export async function watch(fly) {
+    await fly.watch([tests, '__mocks__/*.js'], 'test');
     await fly.watch(src, ['build', 'test']);
-    await fly.watch([tests, mocks], 'test');
 }
