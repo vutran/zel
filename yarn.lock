@@ -885,6 +885,12 @@ fly-esnext@^2.0.1:
   dependencies:
     require-like "^0.1.2"
 
+fly-jest@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/fly-jest/-/fly-jest-1.0.0.tgz#f115b81b17a5e15271991e4dc0c51703437eb033"
+  dependencies:
+    jest-cli "^19.0.2"
+
 fly-prettier@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/fly-prettier/-/fly-prettier-1.0.0.tgz#536d2806365ef09eb9066e1ed8fbb45a29507dc9"
@@ -1467,8 +1473,8 @@ jest-file-exists@^19.0.0:
   resolved "https://registry.yarnpkg.com/jest-file-exists/-/jest-file-exists-19.0.0.tgz#cca2e587a11ec92e24cfeab3f8a94d657f3fceb8"
 
 jest-haste-map@^19.0.0:
-  version "19.0.0"
-  resolved "https://registry.yarnpkg.com/jest-haste-map/-/jest-haste-map-19.0.0.tgz#adde00b62b1fe04432a104b3254fc5004514b55e"
+  version "19.0.1"
+  resolved "https://registry.yarnpkg.com/jest-haste-map/-/jest-haste-map-19.0.1.tgz#7616222491275050c7af39dbeab0a57c32ef9652"
   dependencies:
     fb-watchman "^2.0.0"
     graceful-fs "^4.1.6"

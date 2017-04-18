@@ -23,11 +23,7 @@ export async function lint(fly) {
 }
 
 export async function test(fly) {
-    const rootDir = fly.root;
-    const config = { collectCoverage:true, rootDir };
-    await fly.source('__tests__/*.js').run({every: false}, function * () {
-        runCLI({ config }, rootDir);
-    });
+    await fly.source('__tests__/*.js').jest({ collectCoverage:true });
 }
 
 export async function watch(fly) {
