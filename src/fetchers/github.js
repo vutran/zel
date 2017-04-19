@@ -1,5 +1,5 @@
 // @flow
-import type { ZelConfig, FetchOptions } from '../../types';
+import type { ZelConfig, FetchOptions } from '../types';
 const path = require('path');
 const Promise = require('bluebird');
 const CacheConf = require('cache-conf');

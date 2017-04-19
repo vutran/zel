@@ -7,14 +7,14 @@ export interface ZelConfig {
 }
 
 export interface ResolvedZelConfig {
-    repoName: string;
-    config?: ZelConfig;
+    repoName: string,
+    config?: ZelConfig,
 }
 
 export interface FetchOptions {
-    token?: string;
+    token?: string,
 }
 
 export interface ValidateOptions {
-    token?: string;
+    token?: string,
 }

@@ -1,5 +1,5 @@
 // @flow
-import type { ZelConfig, ResolvedZelConfig, ValidateOptions } from '../../types';
+import type { ZelConfig, ResolvedZelConfig, ValidateOptions } from '../types';
 const Promise = require('bluebird');
 const BaseResolver = require('./base');
 const GitHubFetcher = require('../fetchers/github');
