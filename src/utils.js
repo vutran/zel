@@ -1,6 +1,6 @@
 // @flow
 import type { ZelConfig } from './types';
-const { dirname, normalize } = require('path');
+const path = require('path');
 const { readFile, writeFile } = require('fs');
 const fetch = require('node-fetch');
 const mkdir = require('mkdirp');
@@ -58,16 +58,22 @@ async function getConfig(file: string): Promise<ZelConfig> {
  * @param {string} repo
  * @param {string} branch
  * @param {string} file
+ * @param {string} target - Target write directory
  * @return {Promise<T>}
  */
-async function sync<T>(repo: string, branch: string, file: string): Promise<T> {
+async function sync<T>(
+    repo: string,
+    branch: string,
+    file: string,
+    target: string
+): Promise<T> {
     const info = `${repo}/${branch}/${file}`;
     const uri = `https://raw.githubusercontent.com/${info}`;
     const res = await get(uri);
     if (!res.ok) {
         throw new Error(`Trouble while fetching ${info}.`);
     }
-    return write(file, await res.text());
+    return write(file, await res.text(), target);
 }
 
 /**
@@ -76,13 +82,19 @@ async function sync<T>(repo: string, branch: string, file: string): Promise<T> {
  *
  * @param {string} file - The full file's path.
  * @param {string} data - The data to write.
+ * @param {string} target - Target write directory
  * @param {Object} opts - See `fs.writeFile`.
  * @return {Promise<T>}
  */
-async function write<T>(file: string, data: string, opts: any): Promise<T> {
-    file = normalize(file);
-    await mkdirp(dirname(file));
-    return writer(file, data, opts);
+async function write<T>(
+    file: string,
+    data: string,
+    target: string,
+    opts: any
+): Promise<T> {
+    const targetFile = path.resolve(target, path.normalize(file));
+    await mkdirp(path.dirname(targetFile));
+    return writer(targetFile, data, opts);
 }
 
 module.exports = { bufferToJSON, get, getConfig, sync, write };

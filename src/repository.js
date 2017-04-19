@@ -7,12 +7,17 @@ const { sync } = require('./utils');
  * and creates them in the current directory.
  *
  * @param {string} - The repository name
+ * @param {string} - Write target directory
  * @param {ZelConfig} - The zel config object
  * @return {ZelConfig} - An object with the repository name and config
  */
-function fetchFiles(repoName: string, config: ZelConfig): ResolvedZelConfig {
+function fetchFiles(
+    repoName: string,
+    target: string,
+    config: ZelConfig
+): ResolvedZelConfig {
     if (config.files && config.files.length) {
-        config.files.forEach(file => sync(repoName, 'master', file));
+        config.files.forEach(file => sync(repoName, 'master', file, target));
     }
 
     return ({ repoName, config }: ResolvedZelConfig);

@@ -22,13 +22,13 @@ function writeLog(entries, logger) {
     });
 }
 
-function clone(deps: Array<string>, logger, resolver: BaseResolver) {
+function clone(deps: Array<string>, target: string, logger, resolver: BaseResolver) {
     resolver
         .on('invalid', (resolvedConfig: ResolvedZelConfig) =>
             logger.error(LOG.INVALID, resolvedConfig.repoName)
         )
         .validate(deps)
-        .then(valid => valid.map(v => fetchFiles(v.repoName, v.config)))
+        .then(valid => valid.map(v => fetchFiles(v.repoName, target, v.config)))
         .then(entry => writeLog(entry, logger))
         .catch(err => logger.error(LOG.ERROR, err));
 }
@@ -41,17 +41,22 @@ prog
         'Specify a GitHub token for fetch private repository.',
         prog.STRING
     )
+    .option(
+        '--target <target>',
+        'Specify a target path to download to. Defaults to current directory.'
+    )
     .action((args, options, logger) => {
+        const target = options.target || process.cwd();
         const resolver = new GitHubResolver({ token: options.token });
 
         logger.info(); // padding
 
         if (args.query) {
-            return clone([args.query], logger, resolver);
+            return clone([args.query], target, logger, resolver);
         }
 
         return getLocalDependencies()
-            .then(deps => clone(deps, logger, resolver))
+            .then(deps => clone(deps, target, logger, resolver))
             .catch(err => logger.error(LOG.ERROR, err));
     })
     .command('validate', 'Validates local .zel file.')
