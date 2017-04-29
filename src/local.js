@@ -9,7 +9,7 @@ const { getConfig } = require('./utils');
  *
  * @return {Promise<Array<string>>} - The list of local dependencies
  */
-function getLocalDependencies() {
+function getLocalDependencies(): Promise<Array<string>> {
     return new Promise((resolve, reject) => {
         const dotfile = path.resolve(ZEL.FILE);
         getConfig(dotfile)

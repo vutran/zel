@@ -1,5 +1,5 @@
 // @flow
-import type { ZelConfig, ResolvedZelConfig, ValidateOptions } from '../types';
+import type { ResolvedZelConfig, ValidateOptions, ZelConfig } from '../types';
 const Promise = require('bluebird');
 const BaseResolver = require('./base');
 const GitHubFetcher = require('../fetchers/github');
@@ -50,7 +50,7 @@ class GithubResolver extends BaseResolver {
             .then(config => this.valid.push({ repoName, config }) && config)
             .then(config => this.fetchDependencies(config))
             .catch(err => {
-                this.invalid.push({ repoName });
+                this.invalid.push({ repoName, config: {} });
                 Promise.reject(err);
             });
     }

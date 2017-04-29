@@ -33,7 +33,8 @@ function bufferToJSON(content: Buffer): Object {
  * @return {Promise<T>}
  */
 function get<T: any>(uri: string, options: any): Promise<T> {
-    const headers = { 'User-Agent': pkg.name };
+    const headers = {};
+    headers['User-Agent'] = pkg.name;
     if (options && options.token) {
         headers.Authorization = `token ${options.token}`;
     }
@@ -59,7 +60,7 @@ async function getConfig(file: string): Promise<ZelConfig> {
  * @param {string} file
  * @return {Promise<T>}
  */
-async function sync(repo: string, branch: string, file: string): Promise<T> {
+async function sync<T>(repo: string, branch: string, file: string): Promise<T> {
     const info = `${repo}/${branch}/${file}`;
     const uri = `https://raw.githubusercontent.com/${info}`;
     const res = await get(uri);
@@ -78,7 +79,7 @@ async function sync(repo: string, branch: string, file: string): Promise<T> {
  * @param {Object} opts - See `fs.writeFile`.
  * @return {Promise<T>}
  */
-async function write(file: string, data: string, opts: any): Promise<T> {
+async function write<T>(file: string, data: string, opts: any): Promise<T> {
     file = normalize(file);
     await mkdirp(dirname(file));
     return writer(file, data, opts);

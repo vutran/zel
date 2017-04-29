@@ -1,12 +1,13 @@
 #!/usr/bin/env node
 // @flow
-import type { ZelConfig } from './types';
+import type { ResolvedZelConfig, ZelConfig } from './types';
 const prog = require('caporal');
 const Promise = require('bluebird');
 const { version } = require('../package');
 const { fetchFiles } = require('./repository');
 const { getLocalDependencies } = require('./local');
 const { LOG } = require('./constants');
+const BaseResolver = require('./resolvers/base');
 const GitHubResolver = require('./resolvers/github');
 
 function writeLog(entries, logger) {
@@ -24,7 +25,9 @@ function writeLog(entries, logger) {
 
 function clone(deps: Array<string>, logger, resolver: BaseResolver) {
     resolver
-        .on('invalid', (config: ZelConfig) => logger.error(LOG.INVALID, config.repoName))
+        .on('invalid', (resolvedConfig: ResolvedZelConfig) =>
+            logger.error(LOG.INVALID, resolvedConfig.repoName)
+        )
         .validate(deps)
         .then(valid => valid.map(v => fetchFiles(v.repoName, v.config)))
         .then(entry => writeLog(entry, logger))
