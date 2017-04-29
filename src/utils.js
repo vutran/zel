@@ -1,11 +1,13 @@
 // @flow
-import type { ZelConfig } from './types';
+import type { ResolvedZelConfig, ZelConfig } from './types';
 const path = require('path');
 const { readFile, writeFile } = require('fs');
 const fetch = require('node-fetch');
 const mkdir = require('mkdirp');
 const pify = require('pify');
 const pkg = require('../package');
+const { ZEL, LOG } = require('./constants');
+const BaseResolver = require('./resolvers/base');
 
 const mkdirp = pify(mkdir);
 const writer = pify(writeFile);
@@ -97,4 +99,73 @@ async function write<T>(
     return writer(targetFile, data, opts);
 }
 
-module.exports = { bufferToJSON, get, getConfig, sync, write };
+function clone(deps: Array<string>, target: string, logger: any, resolver: BaseResolver) {
+    resolver
+        .on('invalid', (resolvedConfig: ResolvedZelConfig) =>
+            logger.error(LOG.INVALID, resolvedConfig.repoName)
+        )
+        .validate(deps)
+        .then(valid => valid.map(v => fetchFiles(v.repoName, target, v.config)))
+        .then(entry => writeLog(entry, logger))
+        .catch(err => logger.error(LOG.ERROR, err));
+}
+
+function writeLog(entries: Array<ResolvedZelConfig>, logger: any) {
+    entries.forEach(entry => {
+        if (entry.config.files) {
+            const str = entry.config.files
+                .map(file => `${LOG.SPACER} - ${file}`)
+                .join('');
+
+            logger.info(LOG.DOWNLOADED, LOG.TITLE(entry.repoName));
+            logger.info(str);
+        }
+    });
+}
+
+/**
+ * Fetch the list of files in the given repository,
+ * and creates them in the current directory.
+ *
+ * @param {string} - The repository name
+ * @param {string} - Write target directory
+ * @param {ZelConfig} - The zel config object
+ * @return {ZelConfig} - An object with the repository name and config
+ */
+function fetchFiles(
+    repoName: string,
+    target: string,
+    config: ZelConfig
+): ResolvedZelConfig {
+    if (config.files && config.files.length) {
+        config.files.forEach(file => sync(repoName, 'master', file, target));
+    }
+
+    return ({ repoName, config }: ResolvedZelConfig);
+}
+
+/**
+ * Gets `dependencies` from a local `.zel`, if any
+ *
+ * @return {Promise<Array<string>>} - The list of local dependencies
+ */
+function getLocalDependencies(): Promise<Array<string>> {
+    return new Promise((resolve, reject) => {
+        const dotfile = path.resolve(ZEL.FILE);
+        getConfig(dotfile)
+            .then(data => resolve(data.dependencies || []))
+            .catch(err => reject(err));
+    });
+}
+
+module.exports = {
+    bufferToJSON,
+    fetchFiles,
+    get,
+    getConfig,
+    getLocalDependencies,
+    sync,
+    write,
+    clone,
+    writeLog,
+};
