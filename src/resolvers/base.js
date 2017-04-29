@@ -1,7 +1,6 @@
 // @flow
 import type { ResolvedZelConfig, ValidateOptions, ZelConfig } from '../types';
 const EventEmitter = require('events');
-const Promise = require('bluebird');
 const BaseFetcher = require('../fetchers/base');
 
 class BaseResolver extends EventEmitter {

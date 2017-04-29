@@ -2,14 +2,14 @@
 import type { ZelConfig } from './types';
 const { dirname, normalize } = require('path');
 const { readFile, writeFile } = require('fs');
-const Promise = require('bluebird');
 const fetch = require('node-fetch');
 const mkdir = require('mkdirp');
+const pify = require('pify');
 const pkg = require('../package');
 
-const mkdirp = Promise.promisify(mkdir);
-const writer = Promise.promisify(writeFile);
-const reader = Promise.promisify(readFile);
+const mkdirp = pify(mkdir);
+const writer = pify(writeFile);
+const reader = pify(readFile);
 
 /**
  * Converts a Buffer (base64 string) to a JSON object.

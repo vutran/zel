@@ -2,7 +2,6 @@
 // @flow
 import type { ResolvedZelConfig, ZelConfig } from './types';
 const prog = require('caporal');
-const Promise = require('bluebird');
 const { version } = require('../package');
 const { fetchFiles } = require('./repository');
 const { getLocalDependencies } = require('./local');

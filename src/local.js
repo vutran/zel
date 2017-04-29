@@ -1,6 +1,5 @@
 // @flow
 const path = require('path');
-const Promise = require('bluebird');
 const { ZEL } = require('./constants');
 const { getConfig } = require('./utils');
 
