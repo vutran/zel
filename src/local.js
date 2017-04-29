@@ -1,6 +1,5 @@
 // @flow
 const path = require('path');
-const Promise = require('bluebird');
 const { ZEL } = require('./constants');
 const { getConfig } = require('./utils');
 
@@ -9,7 +8,7 @@ const { getConfig } = require('./utils');
  *
  * @return {Promise<Array<string>>} - The list of local dependencies
  */
-function getLocalDependencies() {
+function getLocalDependencies(): Promise<Array<string>> {
     return new Promise((resolve, reject) => {
         const dotfile = path.resolve(ZEL.FILE);
         getConfig(dotfile)
