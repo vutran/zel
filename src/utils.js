@@ -67,7 +67,7 @@ async function sync<T>(repo: string, branch: string, file: string): Promise<T> {
     if (!res.ok) {
         throw new Error(`Trouble while fetching ${info}.`);
     }
-    return write(file, res.text());
+    return write(file, await res.text());
 }
 
 /**
