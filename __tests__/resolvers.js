@@ -10,6 +10,15 @@ describe('resolvers', () => {
             expect(inst.options)
                 .toEqual({});
         });
+
+        it('should reject', async () => {
+            const inst = new BaseResolver();
+            try {
+                await inst.validate();
+            } catch (err) {
+                expect(err).toBe('Not yet implemented.');
+            }
+        });
     });
 
     describe('GitHubResolver', () => {

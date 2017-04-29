@@ -11,6 +11,15 @@ describe('fetchers', () => {
             expect(inst.options)
                 .toEqual({});
         });
+
+        it('should reject', async () => {
+            const inst = new BaseFetcher();
+            try {
+                await inst.fetchConfig();
+            } catch (err) {
+                expect(err).toBe('Not yet implemented.');
+            }
+        });
     });
 
     describe('FileFetcher', () => {
