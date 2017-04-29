@@ -17,6 +17,7 @@ prog
         '--target <target>',
         'Specify a target path to download to. Defaults to current directory.'
     )
+    .option('--home', "Sets the target path to the user's home directory.")
     .action(actions.query)
     // ACTION: validate
     .command('validate', 'Validates local .zel file.')
