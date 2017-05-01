@@ -1,5 +1,5 @@
 // @flow
-const os = require('os');
+const { homedir } = require('os');
 const GitHubResolver = require('../resolvers/github');
 const { clone, getLocalDependencies } = require('../utils');
 const { LOG } = require('../constants');
@@ -8,7 +8,7 @@ module.exports = function(args: Object, options: Object, logger: any) {
     let target = options.target || process.cwd();
 
     if (options.home) {
-        target = os.homedir();
+        target = homedir();
     }
 
     const resolver = new GitHubResolver({ token: options.token });
