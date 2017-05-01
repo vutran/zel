@@ -119,12 +119,12 @@ describe('utils', () => {
         it('should sync/download the specified file', async () => {
             fetch.__setResponse({ ok: true, text: () => 'FOO RESPONSE' });
 
-            await sync('vutran/test', 'master', 'foo.txt');
+            await sync('vutran/test', 'master', 'foo.txt', '/target/dir');
 
             expect(fs.writeFile)
                 .toBeCalled();
             expect(fs.__getFiles())
-                .toEqual({ 'foo.txt': 'FOO RESPONSE' });
+                .toEqual({ '/target/dir/foo.txt': 'FOO RESPONSE' });
             expect(mkdirp)
                 .toBeCalled();
         });
@@ -133,7 +133,7 @@ describe('utils', () => {
             fetch.__setResponse({ ok: false });
 
             try {
-                await sync('vutran/test', 'master', 'invalid.txt');
+                await sync('vutran/test', 'master', 'invalid.txt', '/target/dir');
             } catch (err) {
                 expect(err).toEqual(new Error('Trouble while fetching vutran/test/master/invalid.txt.'));
             }
@@ -157,16 +157,16 @@ describe('utils', () => {
         });
 
         it('should write content to a file', async () => {
-            await write('test/foo.txt', 'FOO');
+            await write('test/foo.txt', 'FOO', '/target/dir');
 
             expect(mkdirp)
                 .toBeCalled();
             expect(mkdirp.__getDirs())
-                .toContain('test');
+                .toContain('/target/dir/test');
             expect(fs.writeFile)
                 .toBeCalled();
             expect(fs.__getFiles())
-                .toEqual({ 'test/foo.txt': 'FOO' });
+                .toEqual({ '/target/dir/test/foo.txt': 'FOO' });
         });
     });
 });
