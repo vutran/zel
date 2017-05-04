@@ -13,6 +13,8 @@ const ZEL = {
     CACHEDIR: join(HOME, 'cache'),
     // Time for cache to live (milliseconds)
     CACHETIMEOUT: 1000 * 60 * 60,
+    // run-command file
+    RCFILE: '.zelrc',
 };
 
 const LOG = {
