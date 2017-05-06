@@ -5,6 +5,7 @@ const { readFile, writeFile } = require('fs');
 const fetch = require('node-fetch');
 const mkdir = require('mkdirp');
 const pify = require('pify');
+const CacheConf = require('cache-conf');
 const pkg = require('../package');
 const { ZEL, LOG } = require('./constants');
 const BaseResolver = require('./resolvers/base');
@@ -158,6 +159,30 @@ function getLocalDependencies(): Promise<Array<string>> {
     });
 }
 
+/**
+ * Optionally retrieves the token from the cache.
+ * If a token is passed, cache it and return itself.
+ *
+ * @param {string} token
+ * @return {string}
+ */
+function getCachedToken(token?: string): string {
+    const cache = new CacheConf({
+        configName: ZEL.RCFILE,
+        cwd: ZEL.CACHEDIR,
+    });
+
+    if (!token && cache.has('token') && !cache.isExpired('token')) {
+        return cache.get('token');
+    }
+
+    if (token) {
+        cache.set('token', token, { maxAge: ZEL.CACHETIMEOUT });
+    }
+
+    return token;
+}
+
 module.exports = {
     bufferToJSON,
     fetchFiles,
@@ -168,4 +193,5 @@ module.exports = {
     write,
     clone,
     writeLog,
+    getCachedToken,
 };

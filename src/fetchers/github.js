@@ -7,10 +7,6 @@ const { bufferToJSON, get } = require('../utils');
 const BaseFetcher = require('./base');
 
 class GitHubFetcher extends BaseFetcher {
-    constructor(options: FetchOptions) {
-        super(options);
-    }
-
     /**
      * Retrieve the zel configuration file from the cache if available
      *

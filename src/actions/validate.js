@@ -1,10 +1,12 @@
 // @flow
 const GitHubResolver = require('../resolvers/github');
-const { getLocalDependencies } = require('../utils');
+const { getCachedToken, getLocalDependencies } = require('../utils');
 const { LOG } = require('../constants');
 
 module.exports = function(args: Object, options: Object, logger: any) {
-    const resolver = new GitHubResolver({ token: options.token });
+    const token = getCachedToken(options.token);
+    const resolver = new GitHubResolver({ token });
+
     getLocalDependencies()
         .then(deps => {
             resolver
