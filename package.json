@@ -16,7 +16,7 @@
     "build": "fly clean build",
     "dev": "fly watch",
     "flow": "flow",
-    "postinstall": "flow-typed install",
+    "flow-typed": "flow-typed install",
     "precommit": "fly lint",
     "prepublish": "npm run build",
     "test": "fly build test"

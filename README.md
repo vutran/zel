@@ -90,6 +90,15 @@ For more information
 $ zel -h
 ```
 
+## Contributing
+
+1. Clone the repository: `git clone git@github.com:vutran/zel.git`
+2. Install dependencies: `npm install` or `yarn`
+3. Install [flow-typed](https://github.com/flowtype/flow-typed) typings: `npm run flow-typed`
+4. Start [Fly](https://github.com/flyjs/fly) dev task: `npm run dev`
+5. Make edits, commit
+6. Submit a [PR](https://github.com/vutran/zel/compare).
+
 ## License
 
 MIT © [Vu Tran](https://github.com/vutran/)
