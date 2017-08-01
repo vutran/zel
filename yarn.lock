@@ -16,9 +16,9 @@
     require-like "^0.1.2"
     rewrite-imports "^1.0.0"
 
-"@taskr/jest@^1.1.0":
-  version "1.1.0"
-  resolved "https://registry.yarnpkg.com/@taskr/jest/-/jest-1.1.0.tgz#06201c56104791768b0f42517ae224c8273ecda2"
+"@taskr/jest@^1.1.1":
+  version "1.1.1"
+  resolved "https://registry.yarnpkg.com/@taskr/jest/-/jest-1.1.1.tgz#c20798753e0037d869f5a72925a68828a205d048"
   dependencies:
     jest-cli "^20.0.0"
 

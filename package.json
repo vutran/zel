@@ -35,7 +35,7 @@
   "devDependencies": {
     "@taskr/clear": "^1.1.0",
     "@taskr/esnext": "^1.1.0",
-    "@taskr/jest": "^1.1.0",
+    "@taskr/jest": "^1.1.1",
     "@taskr/prettier": "^1.1.0",
     "@taskr/unflow": "^1.1.0",
     "@taskr/watch": "^1.1.0",
