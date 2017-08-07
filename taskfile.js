@@ -13,10 +13,8 @@ export async function build(task, opts) {
 
 export async function lint(task) {
     await task.source(src).prettier({
-        tabWidth: 4,
         singleQuote: true,
-        trailingComma: 'es5',
-        printWidth: 90
+        trailingComma: 'es5'
     }).target('src');
 }
 
