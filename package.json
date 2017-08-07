@@ -33,6 +33,7 @@
     "@taskr/prettier": "^1.1.0",
     "@taskr/watch": "^1.1.0",
     "coveralls": "^2.13.0",
+    "husky": "^0.14.3",
     "taskr": "^1.1.0"
   }
 }
