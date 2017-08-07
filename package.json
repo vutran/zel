@@ -23,8 +23,10 @@
   "author": "Vu Tran <vu@vu-tran.com>",
   "license": "MIT",
   "dependencies": {
-    "mkdirp": "^0.5.1"
     "chalk": "^2.1.0",
+    "gittar": "^0.1.0",
+    "mkdirp": "^0.5.1",
+    "mri": "^1.1.0"
   },
   "devDependencies": {
     "@taskr/clear": "^1.1.0",
