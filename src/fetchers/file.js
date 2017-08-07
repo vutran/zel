@@ -3,7 +3,7 @@ import type { ZelConfig } from '../types';
 const BaseFetcher = require('./base');
 
 class FileFetcher extends BaseFetcher {
-    // TODO
+  // TODO
 }
 
 module.exports = FileFetcher;

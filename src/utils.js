@@ -21,11 +21,11 @@ const reader = pify(readFile);
  * @return {Object}
  */
 function bufferToJSON(content: Buffer): Object {
-    try {
-        return JSON.parse(Buffer.from(content, 'base64').toString('utf8'));
-    } catch (err) {
-        throw err;
-    }
+  try {
+    return JSON.parse(Buffer.from(content, 'base64').toString('utf8'));
+  } catch (err) {
+    throw err;
+  }
 }
 
 /**
@@ -36,12 +36,12 @@ function bufferToJSON(content: Buffer): Object {
  * @return {Promise<T>}
  */
 function get<T: any>(uri: string, options: any): Promise<T> {
-    const headers = {};
-    headers['User-Agent'] = pkg.name;
-    if (options && options.token) {
-        headers.Authorization = `token ${options.token}`;
-    }
-    return fetch(uri, { headers });
+  const headers = {};
+  headers['User-Agent'] = pkg.name;
+  if (options && options.token) {
+    headers.Authorization = `token ${options.token}`;
+  }
+  return fetch(uri, { headers });
 }
 
 /**
@@ -51,8 +51,8 @@ function get<T: any>(uri: string, options: any): Promise<T> {
  * @return {Promise<ZelConfig>} - The file contents as JSON Object
  */
 async function getConfig(file: string): Promise<ZelConfig> {
-    const buf = await reader(file); // err && (err.code === 'ENOENT') && reject(`File does not exist: ${file}`);
-    return (bufferToJSON(buf, file): ZelConfig); // reject(msg);
+  const buf = await reader(file); // err && (err.code === 'ENOENT') && reject(`File does not exist: ${file}`);
+  return (bufferToJSON(buf, file): ZelConfig); // reject(msg);
 }
 
 /**
@@ -65,18 +65,18 @@ async function getConfig(file: string): Promise<ZelConfig> {
  * @return {Promise<T>}
  */
 async function sync<T>(
-    repo: string,
-    branch: string,
-    file: string,
-    target: string
+  repo: string,
+  branch: string,
+  file: string,
+  target: string
 ): Promise<T> {
-    const info = `${repo}/${branch}/${file}`;
-    const uri = `https://raw.githubusercontent.com/${info}`;
-    const res = await get(uri);
-    if (!res.ok) {
-        throw new Error(`Trouble while fetching ${info}.`);
-    }
-    return write(file, await res.text(), target);
+  const info = `${repo}/${branch}/${file}`;
+  const uri = `https://raw.githubusercontent.com/${info}`;
+  const res = await get(uri);
+  if (!res.ok) {
+    throw new Error(`Trouble while fetching ${info}.`);
+  }
+  return write(file, await res.text(), target);
 }
 
 /**
@@ -90,38 +90,43 @@ async function sync<T>(
  * @return {Promise<T>}
  */
 async function write<T>(
-    file: string,
-    data: string,
-    target: string,
-    opts: any
+  file: string,
+  data: string,
+  target: string,
+  opts: any
 ): Promise<T> {
-    const targetFile = path.resolve(target, path.normalize(file));
-    await mkdirp(path.dirname(targetFile));
-    return writer(targetFile, data, opts);
+  const targetFile = path.resolve(target, path.normalize(file));
+  await mkdirp(path.dirname(targetFile));
+  return writer(targetFile, data, opts);
 }
 
-function clone(deps: Array<string>, target: string, logger: any, resolver: BaseResolver) {
-    resolver
-        .on('invalid', (resolvedConfig: ResolvedZelConfig) =>
-            logger.error(LOG.INVALID, resolvedConfig.repoName)
-        )
-        .validate(deps)
-        .then(valid => valid.map(v => fetchFiles(v.repoName, target, v.config)))
-        .then(entry => writeLog(entry, logger))
-        .catch(err => logger.error(LOG.ERROR, err));
+function clone(
+  deps: Array<string>,
+  target: string,
+  logger: any,
+  resolver: BaseResolver
+) {
+  resolver
+    .on('invalid', (resolvedConfig: ResolvedZelConfig) =>
+      logger.error(LOG.INVALID, resolvedConfig.repoName)
+    )
+    .validate(deps)
+    .then(valid => valid.map(v => fetchFiles(v.repoName, target, v.config)))
+    .then(entry => writeLog(entry, logger))
+    .catch(err => logger.error(LOG.ERROR, err));
 }
 
 function writeLog(entries: Array<ResolvedZelConfig>, logger: any) {
-    entries.forEach(entry => {
-        if (entry.config.files) {
-            const str = entry.config.files
-                .map(file => `${LOG.SPACER} - ${file}`)
-                .join('');
+  entries.forEach(entry => {
+    if (entry.config.files) {
+      const str = entry.config.files
+        .map(file => `${LOG.SPACER} - ${file}`)
+        .join('');
 
-            logger.info(LOG.DOWNLOADED, LOG.TITLE(entry.repoName));
-            logger.info(str);
-        }
-    });
+      logger.info(LOG.DOWNLOADED, LOG.TITLE(entry.repoName));
+      logger.info(str);
+    }
+  });
 }
 
 /**
@@ -134,15 +139,15 @@ function writeLog(entries: Array<ResolvedZelConfig>, logger: any) {
  * @return {ZelConfig} - An object with the repository name and config
  */
 function fetchFiles(
-    repoName: string,
-    target: string,
-    config: ZelConfig
+  repoName: string,
+  target: string,
+  config: ZelConfig
 ): ResolvedZelConfig {
-    if (config.files && config.files.length) {
-        config.files.forEach(file => sync(repoName, 'master', file, target));
-    }
+  if (config.files && config.files.length) {
+    config.files.forEach(file => sync(repoName, 'master', file, target));
+  }
 
-    return ({ repoName, config }: ResolvedZelConfig);
+  return ({ repoName, config }: ResolvedZelConfig);
 }
 
 /**
@@ -151,12 +156,12 @@ function fetchFiles(
  * @return {Promise<Array<string>>} - The list of local dependencies
  */
 function getLocalDependencies(): Promise<Array<string>> {
-    return new Promise((resolve, reject) => {
-        const dotfile = path.resolve(ZEL.FILE);
-        getConfig(dotfile)
-            .then(data => resolve(data.dependencies || []))
-            .catch(err => reject(err));
-    });
+  return new Promise((resolve, reject) => {
+    const dotfile = path.resolve(ZEL.FILE);
+    getConfig(dotfile)
+      .then(data => resolve(data.dependencies || []))
+      .catch(err => reject(err));
+  });
 }
 
 /**
@@ -167,31 +172,31 @@ function getLocalDependencies(): Promise<Array<string>> {
  * @return {string}
  */
 function getCachedToken(token?: string): string {
-    const cache = new CacheConf({
-        configName: ZEL.RCFILE,
-        cwd: ZEL.CACHEDIR,
-    });
+  const cache = new CacheConf({
+    configName: ZEL.RCFILE,
+    cwd: ZEL.CACHEDIR,
+  });
 
-    if (!token && cache.has('token') && !cache.isExpired('token')) {
-        return cache.get('token');
-    }
+  if (!token && cache.has('token') && !cache.isExpired('token')) {
+    return cache.get('token');
+  }
 
-    if (token) {
-        cache.set('token', token, { maxAge: ZEL.CACHETIMEOUT });
-    }
+  if (token) {
+    cache.set('token', token, { maxAge: ZEL.CACHETIMEOUT });
+  }
 
-    return token;
+  return token;
 }
 
 module.exports = {
-    bufferToJSON,
-    fetchFiles,
-    get,
-    getConfig,
-    getLocalDependencies,
-    sync,
-    write,
-    clone,
-    writeLog,
-    getCachedToken,
+  bufferToJSON,
+  fetchFiles,
+  get,
+  getConfig,
+  getLocalDependencies,
+  sync,
+  write,
+  clone,
+  writeLog,
+  getCachedToken,
 };

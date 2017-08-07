@@ -1,5 +1,5 @@
 // @flow
 module.exports = {
-    query: require('./query'),
-    validate: require('./validate'),
+  query: require('./query'),
+  validate: require('./validate'),
 };

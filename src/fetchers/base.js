@@ -3,22 +3,22 @@ import type { ZelConfig, FetchOptions } from '../types';
 const EventEmitter = require('events');
 
 class BaseFetcher extends EventEmitter {
-    options: FetchOptions;
+  options: FetchOptions;
 
-    constructor(options: FetchOptions) {
-        super();
-        this.options = options || {};
-    }
+  constructor(options: FetchOptions) {
+    super();
+    this.options = options || {};
+  }
 
-    /**
+  /**
      * Fetches a configuration file
      *
      * @param {string} repoName
      * @return {Promise<ZelConfig>}
      */
-    fetchConfig(repoName: string): Promise<ZelConfig> {
-        return Promise.reject('Not yet implemented.');
-    }
+  fetchConfig(repoName: string): Promise<ZelConfig> {
+    return Promise.reject('Not yet implemented.');
+  }
 }
 
 module.exports = BaseFetcher;
