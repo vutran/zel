@@ -11,7 +11,13 @@
     "node": ">= 4"
   },
   "scripts": {
-    "precommit": "prettier --single-quote --use-tabs --trailing-comma es5 --write \"{lib,tests}/*.js\""
+    "precommit": "lint-staged"
+  },
+  "lint-staged": {
+    "*.js": [
+      "prettier --single-quote --use-tabs --trailing-comma es5 --write",
+      "git add"
+    ]
   },
   "keywords": [],
   "author": "Vu Tran <vu@vu-tran.com>",
@@ -24,6 +30,7 @@
   "devDependencies": {
     "coveralls": "^2.13.0",
     "husky": "^0.14.3",
+    "lint-staged": "^4.0.3",
     "prettier": "^1.5.3"
   }
 }
