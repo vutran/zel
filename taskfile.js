@@ -8,13 +8,12 @@ export async function clean(task) {
 }
 
 export async function build(task, opts) {
-    await task.source(opts.src || src, { ignore:types }).unflow().target(dist);
+    await task.source(opts.src || src, { ignore:types }).target(dist);
 }
 
 export async function lint(task) {
     await task.source(src).prettier({
         tabWidth: 4,
-        parser: 'flow',
         singleQuote: true,
         trailingComma: 'es5',
         printWidth: 90

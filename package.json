@@ -15,8 +15,6 @@
   "scripts": {
     "build": "taskr clean build",
     "dev": "taskr watch",
-    "flow": "flow",
-    "flow-typed": "flow-typed install",
     "precommit": "taskr lint",
     "prepublish": "npm run build",
     "test": "taskr build test"
