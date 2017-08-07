@@ -11,7 +11,8 @@
     "node": ">= 4"
   },
   "scripts": {
-    "precommit": "lint-staged"
+    "precommit": "lint-staged",
+    "test": "echo 'Nothing yet'"
   },
   "lint-staged": {
     "*.js": [
