@@ -13,11 +13,7 @@
     "node": ">= 4"
   },
   "scripts": {
-    "build": "taskr clean build",
-    "dev": "taskr watch",
-    "precommit": "taskr lint",
-    "prepublish": "npm run build",
-    "test": "taskr build test"
+    "precommit": "prettier --single-quote --use-tabs --trailing-comma es5 --write \"{lib,tests}/*.js\""
   },
   "keywords": [],
   "author": "Vu Tran <vu@vu-tran.com>",
@@ -28,13 +24,8 @@
     "mri": "^1.1.0"
   },
   "devDependencies": {
-    "@taskr/clear": "^1.1.0",
-    "@taskr/esnext": "^1.1.0",
-    "@taskr/jest": "^1.1.1",
-    "@taskr/prettier": "^1.1.0",
-    "@taskr/watch": "^1.1.0",
     "coveralls": "^2.13.0",
     "husky": "^0.14.3",
-    "taskr": "^1.1.0"
+    "prettier": "^1.5.3"
   }
 }
