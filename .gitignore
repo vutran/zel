@@ -1,7 +1,5 @@
 .DS_Store
 node_modules
-flow-typed
-*.log
-lib
 coverage
 .vscode
+*.log
