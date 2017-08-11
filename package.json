@@ -29,7 +29,7 @@
     "mri": "^1.1.0"
   },
   "devDependencies": {
-    "coveralls": "^2.13.0",
+    "coveralls": "^2.13.1",
     "glob": "^7.1.2",
     "husky": "^0.14.3",
     "lint-staged": "^4.0.3",
