@@ -12,7 +12,7 @@ const files = ['.gitignore', '.zel'];
 const zel = join(__dirname, '../lib');
 const fix = join(__dirname, 'fixtures');
 
-const cleanup = str => () => rimraf(str);
+const cleanup = str => rimraf(str);
 const isDir = str => fs.statSync(str).isDirectory();
 const tmpDir = _ => join(fix, `tmp-${Math.random()}`);
 
