@@ -28,17 +28,6 @@ function isHelp(str) {
 	);
 }
 
-function validate(t, dir, toClean) {
-	return new Promise(res => {
-		const arr = expand(dir);
-		t.true(isDir(dir), 'creates the target dir');
-		t.equal(arr.length, files.length, 'creates all files');
-		t.deepEqual(arr, files, 'creates expected files');
-		toClean && cleanup(dir);
-		res();
-	});
-}
-
 function run(args, opts) {
 	return new Promise((res, rej) => {
 		opts = opts || {};
@@ -46,6 +35,10 @@ function run(args, opts) {
 		exec(`node ${zel} ${args}`, opts, cb);
 	});
 }
+
+// TODO: `--force`
+// TODO: `--cache`
+// TODO: failures
 
 test('$ zel', t => {
 	t.plan(1);
@@ -68,15 +61,49 @@ test('$ zel --help', t => {
 	});
 });
 
-test(`$ zel ${repo}`, t => {
+test('$ zel user/repo', t => {
 	t.plan(3);
 	const tmp = tmpDir();
 	mkdir.sync(tmp); // prepare `cwd` context
-	run(repo, { cwd: tmp }).then(_ => validate(t, tmp, true));
+	run(repo, { cwd: tmp }).then(_ => {
+		const arr = expand(tmp);
+		t.true(isDir(tmp), 'creates the target dir');
+		t.equal(arr.length, files.length, 'creates all files');
+		t.deepEqual(arr, files, 'creates expected files');
+		cleanup(tmp);
+	});
 });
 
-test(`$ zel ${repo} target`, t => {
+test('$ zel user/repo target', t => {
 	t.plan(3);
 	const tmp = tmpDir();
-	run(`${repo} ${tmp}`).then(_ => validate(t, tmp, true));
+	run(`${repo} ${tmp}`).then(_ => {
+		const arr = expand(tmp);
+		t.true(isDir(tmp), 'creates the target dir');
+		t.equal(arr.length, files.length, 'creates all files');
+		t.deepEqual(arr, files, 'creates expected files');
+		cleanup(tmp);
+	});
+});
+
+test(`$ zel user/repo#tag target`, t => {
+	t.plan(2);
+	const tmp = tmpDir();
+	run(`lukeed/mri#v1.0.0 ${tmp}`).then(_ => {
+		const arr = expand(tmp);
+		t.true(isDir(tmp), 'creates the target dir');
+		t.equal(arr.length, 10, 'creates all files');
+		cleanup(tmp);
+	});
+});
+
+test(`$ zel gitlab:user/repo#tag target`, t => {
+	t.plan(2);
+	const tmp = tmpDir();
+	run(`gitlab:Rich-Harris/buble#v0.1.0 ${tmp}`).then(_ => {
+		const arr = expand(tmp);
+		t.true(isDir(tmp), 'creates the target dir');
+		t.equal(arr.length, 30, 'creates all files');
+		cleanup(tmp);
+	});
 });
