@@ -7,25 +7,34 @@ const mkdir = require('mkdirp');
 const test = require('tape');
 
 const repo = 'vutran/gitignore';
-const files = ['.zel', '.gitignore'];
+const files = ['.gitignore', '.zel'];
 
 const zel = join(__dirname, '../lib');
 const fix = join(__dirname, 'fixtures');
 
 const cleanup = str => () => rimraf(str);
-const expand = (str, opts) => glob(str, opts);
-const isHelp = str =>
-	str.includes('Usage') && str.includes('Options') && str.includes('Examples');
 const isDir = str => fs.statSync(str).isDirectory();
 const tmpDir = _ => join(fix, `tmp-${Math.random()}`);
 
-function validate(t, dir) {
+function expand(dir) {
+	return glob(`${dir}/**`, { dot: true, nodir: true }).map(str => {
+		return str.replace(dir, '').substr(1); // leading '/'
+	});
+}
+
+function isHelp(str) {
+	return (
+		str.includes('Usage') && str.includes('Options') && str.includes('Examples')
+	);
+}
+
+function validate(t, dir, toClean) {
 	return new Promise(res => {
-		const arr = expand(`${dir}/**`, { dot: true, nodir: true });
-		console.log(arr);
+		const arr = expand(dir);
 		t.true(isDir(dir), 'creates the target dir');
 		t.equal(arr.length, files.length, 'creates all files');
 		t.deepEqual(arr, files, 'creates expected files');
+		toClean && cleanup(dir);
 		res();
 	});
 }
@@ -33,11 +42,8 @@ function validate(t, dir) {
 function run(args, opts) {
 	return new Promise((res, rej) => {
 		opts = opts || {};
-		exec(
-			`node ${zel} ${args}`,
-			opts,
-			(err, out) => (err ? rej(err) : res(out))
-		);
+		const cb = (err, out) => (err ? rej(err) : res(out));
+		exec(`node ${zel} ${args}`, opts, cb);
 	});
 }
 
@@ -66,12 +72,11 @@ test(`$ zel ${repo}`, t => {
 	t.plan(3);
 	const tmp = tmpDir();
 	mkdir.sync(tmp); // prepare `cwd` context
-	run(repo, { cwd: tmp }).then(validate(t, tmp)).then();
+	run(repo, { cwd: tmp }).then(_ => validate(t, tmp, true));
 });
 
 test(`$ zel ${repo} target`, t => {
 	t.plan(3);
 	const tmp = tmpDir();
-	console.log(tmp);
-	run(`${repo} ${tmp}`).then(validate(t, tmp)).then();
+	run(`${repo} ${tmp}`).then(_ => validate(t, tmp, true));
 });
