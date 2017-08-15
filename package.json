@@ -12,7 +12,7 @@
   },
   "scripts": {
     "precommit": "lint-staged",
-    "test": "echo 'Nothing yet'"
+    "test": "tape test/*.js | tap-spec"
   },
   "lint-staged": {
     "*.js": [
@@ -29,9 +29,14 @@
     "mri": "^1.1.0"
   },
   "devDependencies": {
-    "coveralls": "^2.13.0",
+    "coveralls": "^2.13.1",
+    "glob": "^7.1.2",
     "husky": "^0.14.3",
     "lint-staged": "^4.0.3",
-    "prettier": "^1.5.3"
+    "mkdirp": "^0.5.1",
+    "prettier": "^1.5.3",
+    "rimraf": "^2.6.1",
+    "tap-spec": "^4.1.1",
+    "tape": "^4.8.0"
   }
 }
