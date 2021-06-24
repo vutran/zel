@@ -1,3 +1,5 @@
+🚧 Discontinued. Please use [Github templates](https://docs.github.com/en/github/creating-cloning-and-archiving-repositories/creating-a-repository-on-github/creating-a-template-repository).
+
 # zel
 
 > `zel` is a small, and simple command-line tool that helps kickstart new projects.
